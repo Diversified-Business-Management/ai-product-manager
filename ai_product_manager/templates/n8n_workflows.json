@@ -1,0 +1,231 @@
+{
+  "workflows": [
+    {
+      "name": "AI Product Manager — Survey Ingestion Pipeline",
+      "description": "Watches for new survey responses (Google Forms/Sheets), processes them through the scoring engine, and triggers report generation.",
+      "trigger": "Google Sheets — New Row Added",
+      "nodes": [
+        {
+          "name": "Google Sheets Trigger",
+          "type": "n8n-nodes-base.googleSheetsTrigger",
+          "config": {
+            "operation": "onNewRow",
+            "sheetId": "{{YOUR_GOOGLE_SHEET_ID}}",
+            "sheetName": "Survey Responses",
+            "pollInterval": 300
+          },
+          "notes": "Replace YOUR_GOOGLE_SHEET_ID with your actual Google Sheets ID containing survey responses"
+        },
+        {
+          "name": "Transform Survey Data",
+          "type": "n8n-nodes-base.code",
+          "config": {
+            "language": "javascript",
+            "code": "// Map Google Sheets columns to scoring engine format\nconst row = $input.first().json;\nreturn [{\n  json: {\n    company: row.Company || '',\n    name: row.Name || '',\n    role: row.Role || '',\n    business_model: row['Business Model'] || '',\n    offering_types: row['Offering Types'] || '',\n    commerce_platform: row['Commerce Platform'] || '',\n    catalog_interest: row['Catalog Features'] || '',\n    pricing_capabilities: row['Pricing Capabilities'] || '',\n    promotion_interest: row['Promotion Capabilities'] || '',\n    willing_to_interview: row['Willing to Participate'] || 'No',\n    email: row['Email Address'] || '',\n    timestamp: new Date().toISOString()\n  }\n}];"
+          }
+        },
+        {
+          "name": "Append to Master CSV",
+          "type": "n8n-nodes-base.googleSheets",
+          "config": {
+            "operation": "appendOrUpdate",
+            "sheetId": "{{YOUR_MASTER_SHEET_ID}}",
+            "sheetName": "All Responses"
+          }
+        },
+        {
+          "name": "Run Scoring Engine",
+          "type": "n8n-nodes-base.httpRequest",
+          "config": {
+            "method": "POST",
+            "url": "{{YOUR_SCORING_API_URL}}/api/score",
+            "body": {
+              "action": "rescore_all",
+              "include_survey": true
+            }
+          },
+          "notes": "If running locally, use the CLI. For cloud: set up a webhook endpoint that triggers the Python scoring engine."
+        },
+        {
+          "name": "Check Score Changes",
+          "type": "n8n-nodes-base.code",
+          "config": {
+            "language": "javascript",
+            "code": "const results = $input.first().json;\nconst significantChanges = results.capabilities.filter(c => c.score_delta && Math.abs(c.score_delta) > 0.5);\nreturn [{ json: { has_changes: significantChanges.length > 0, changes: significantChanges, total: results.capabilities.length } }];"
+          }
+        },
+        {
+          "name": "Send Notification",
+          "type": "n8n-nodes-base.slack",
+          "config": {
+            "channel": "#product-roadmap",
+            "message": "🔄 New survey response processed. {{$json.total}} capabilities rescored. {{$json.changes.length}} significant score changes detected."
+          },
+          "notes": "Replace with your Slack channel or use email node instead"
+        }
+      ]
+    },
+    {
+      "name": "AI Product Manager — Weekly Report Generation",
+      "description": "Runs weekly to regenerate prioritization reports and stakeholder decks, then distributes them.",
+      "trigger": "Schedule — Every Monday at 8:00 AM",
+      "nodes": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "config": {
+            "rule": {
+              "interval": [{ "field": "weeks", "weeksInterval": 1, "triggerAtDay": 1, "triggerAtHour": 8 }]
+            }
+          }
+        },
+        {
+          "name": "Export Survey Data",
+          "type": "n8n-nodes-base.googleSheets",
+          "config": {
+            "operation": "read",
+            "sheetId": "{{YOUR_MASTER_SHEET_ID}}",
+            "sheetName": "All Responses",
+            "outputFormat": "csv"
+          }
+        },
+        {
+          "name": "Run Full Pipeline",
+          "type": "n8n-nodes-base.executeCommand",
+          "config": {
+            "command": "cd /path/to/ai_product_manager && python main.py --mode full --output /tmp/weekly_report"
+          },
+          "notes": "Adjust path to your AI Product Manager installation"
+        },
+        {
+          "name": "Upload Report to Drive",
+          "type": "n8n-nodes-base.googleDrive",
+          "config": {
+            "operation": "upload",
+            "folderId": "{{YOUR_DRIVE_FOLDER_ID}}",
+            "fileName": "Capability_Report_{{$now.format('YYYY-MM-DD')}}.md"
+          }
+        },
+        {
+          "name": "Upload Deck to Drive",
+          "type": "n8n-nodes-base.googleDrive",
+          "config": {
+            "operation": "upload",
+            "folderId": "{{YOUR_DRIVE_FOLDER_ID}}",
+            "fileName": "Executive_Brief_{{$now.format('YYYY-MM-DD')}}.pptx"
+          }
+        },
+        {
+          "name": "Email Stakeholders",
+          "type": "n8n-nodes-base.emailSend",
+          "config": {
+            "to": "{{STAKEHOLDER_EMAIL_LIST}}",
+            "subject": "Weekly Capability Prioritization Update — {{$now.format('MMM D, YYYY')}}",
+            "body": "Hi team,\n\nThe weekly capability prioritization report has been generated and is available in the shared Drive folder.\n\nKey highlights:\n- {{$json.high_priority}} capabilities rated HIGH priority\n- Top capability: {{$json.top_capability}}\n- {{$json.new_responses}} new survey responses processed\n\nBest,\nAI Product Manager"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Product Manager — Score Change Alerting",
+      "description": "Monitors for significant scoring changes and alerts the product team in real-time.",
+      "trigger": "Webhook — Score Update Event",
+      "nodes": [
+        {
+          "name": "Webhook Trigger",
+          "type": "n8n-nodes-base.webhook",
+          "config": {
+            "path": "/score-update",
+            "method": "POST"
+          }
+        },
+        {
+          "name": "Evaluate Changes",
+          "type": "n8n-nodes-base.code",
+          "config": {
+            "language": "javascript",
+            "code": "const data = $input.first().json;\nconst alerts = [];\nfor (const cap of data.capabilities || []) {\n  if (cap.priority_changed) alerts.push(`⚠️ ${cap.name}: ${cap.old_priority} → ${cap.new_priority}`);\n  if (Math.abs(cap.score_delta || 0) > 1.0) alerts.push(`📊 ${cap.name}: score ${cap.score_delta > 0 ? '+' : ''}${cap.score_delta.toFixed(2)}`);\n}\nreturn [{ json: { alerts, count: alerts.length, has_alerts: alerts.length > 0 } }];"
+          }
+        },
+        {
+          "name": "Filter — Only If Alerts",
+          "type": "n8n-nodes-base.if",
+          "config": {
+            "conditions": { "boolean": [{ "value1": "={{$json.has_alerts}}", "value2": true }] }
+          }
+        },
+        {
+          "name": "Send Alert to Slack",
+          "type": "n8n-nodes-base.slack",
+          "config": {
+            "channel": "#product-alerts",
+            "message": "🚨 Capability Score Changes Detected:\n{{$json.alerts.join('\\n')}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Product Manager — Interview Scheduler",
+      "description": "Identifies willing survey participants and sends interview scheduling invites.",
+      "trigger": "Manual or after survey ingestion",
+      "nodes": [
+        {
+          "name": "Manual Trigger",
+          "type": "n8n-nodes-base.manualTrigger"
+        },
+        {
+          "name": "Read Survey Responses",
+          "type": "n8n-nodes-base.googleSheets",
+          "config": {
+            "operation": "read",
+            "sheetId": "{{YOUR_MASTER_SHEET_ID}}",
+            "sheetName": "All Responses"
+          }
+        },
+        {
+          "name": "Filter Willing Participants",
+          "type": "n8n-nodes-base.code",
+          "config": {
+            "language": "javascript",
+            "code": "const rows = $input.all();\nconst willing = rows.filter(r => r.json['Willing to Participate'] === 'Yes' && r.json['Email Address']);\nreturn willing;"
+          }
+        },
+        {
+          "name": "Send Calendar Invite",
+          "type": "n8n-nodes-base.googleCalendar",
+          "config": {
+            "operation": "create",
+            "summary": "Zuora Roadmap & Design Interview",
+            "description": "Thank you for participating in our survey. We'd love to hear more about your needs in a 1-hour roadmap and design interview.",
+            "duration": 60,
+            "attendees": "={{$json['Email Address']}}"
+          }
+        }
+      ]
+    }
+  ],
+  "setup_instructions": {
+    "prerequisites": [
+      "n8n Cloud account (or self-hosted instance)",
+      "Google Cloud Console project with these APIs enabled: Sheets, Drive, Calendar, Gmail",
+      "Google OAuth2 credentials configured in n8n",
+      "Slack integration (optional) configured in n8n"
+    ],
+    "google_cloud_setup": [
+      "1. Go to console.cloud.google.com",
+      "2. Create or select a project",
+      "3. Enable APIs: Google Sheets API, Google Drive API, Google Calendar API, Gmail API",
+      "4. Create OAuth2 credentials (Web Application type)",
+      "5. Add n8n callback URL to authorized redirect URIs",
+      "6. In n8n: Settings → Credentials → Add Google OAuth2 credential",
+      "7. Paste Client ID and Client Secret, then authorize"
+    ],
+    "placeholder_values": {
+      "YOUR_GOOGLE_SHEET_ID": "The ID from your Google Sheets URL (between /d/ and /edit)",
+      "YOUR_MASTER_SHEET_ID": "ID of the master sheet that accumulates all responses",
+      "YOUR_DRIVE_FOLDER_ID": "Google Drive folder ID for report storage",
+      "YOUR_SCORING_API_URL": "URL where the scoring API is hosted (or use CLI for local execution)",
+      "STAKEHOLDER_EMAIL_LIST": "Comma-separated email list for report distribution"
+    }
+  }
+}

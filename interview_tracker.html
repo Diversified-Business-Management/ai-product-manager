@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI PM | Interview Tracker & Insights</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --primary: #1F4E79; --primary-light: #2E75B6; --accent: #FF6B35; --success: #059669; --warning: #D97706; --danger: #DC2626; --bg: #F8FAFC; --card: #FFF; --text: #1E293B; --text-light: #64748B; --border: #E2E8F0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
+
+/* Header */
+.header { background: var(--primary); color: white; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 20px; }
+.header-actions { display: flex; gap: 12px; align-items: center; }
+.header select { padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white; font-size: 14px; }
+.header select option { background: var(--primary); }
+.btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-accent { background: var(--accent); color: white; }
+.btn-accent:hover { background: #E55A2B; }
+.btn-outline { background: transparent; color: white; border: 1px solid rgba(255,255,255,0.4); }
+.btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+/* Tabs */
+.tab-bar { background: white; border-bottom: 1px solid var(--border); display: flex; padding: 0 32px; }
+.tab { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text-light); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab:hover { color: var(--primary); }
+
+/* Layout */
+.container { max-width: 1200px; margin: 24px auto; padding: 0 24px; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* KPI Row */
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+.kpi { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.kpi-value { font-size: 28px; font-weight: 700; color: var(--primary); }
+.kpi-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+.kpi-change { font-size: 11px; margin-top: 4px; }
+.kpi-change.up { color: var(--success); }
+.kpi-change.down { color: var(--danger); }
+
+/* Interview Pipeline */
+.pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.pipeline-col { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pipeline-header { padding: 12px 16px; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+.pipeline-header .count { background: rgba(0,0,0,0.08); padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+.col-scheduled .pipeline-header { background: #DBEAFE; color: #1E40AF; }
+.col-completed .pipeline-header { background: #D1FAE5; color: #065F46; }
+.col-analyzing .pipeline-header { background: #FEF3C7; color: #92400E; }
+.col-insights .pipeline-header { background: #F3E8FF; color: #6B21A8; }
+.pipeline-body { padding: 12px; min-height: 200px; }
+
+/* Interview Card */
+.interview-card { background: #F8FAFC; border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+.interview-card:hover { border-color: var(--primary-light); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.ic-company { font-weight: 700; font-size: 14px; color: var(--primary); }
+.ic-contact { font-size: 12px; color: var(--text-light); margin: 2px 0; }
+.ic-meta { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+.ic-date { font-size: 11px; color: var(--text-light); }
+.ic-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: 600; }
+.tag-enterprise { background: #DBEAFE; color: #1E40AF; }
+.tag-midmarket { background: #D1FAE5; color: #065F46; }
+.tag-priority { background: #FEE2E2; color: #991B1B; }
+
+/* Insights Panel */
+.insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.insight-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.insight-card h3 { font-size: 15px; color: var(--primary); margin-bottom: 12px; }
+
+/* Theme Cluster */
+.theme-cluster { margin-bottom: 16px; }
+.theme-name { font-size: 13px; font-weight: 700; margin-bottom: 6px; display: flex; justify-content: space-between; }
+.theme-bar { height: 8px; background: #E2E8F0; border-radius: 4px; overflow: hidden; }
+.theme-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+
+/* Quote */
+.quote { background: #F0F7FF; border-left: 3px solid var(--primary-light); padding: 10px 14px; margin-bottom: 10px; border-radius: 0 6px 6px 0; }
+.quote-text { font-size: 13px; font-style: italic; color: var(--text); line-height: 1.6; }
+.quote-source { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+
+/* Table */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th { background: #F1F5F9; padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-light); border-bottom: 2px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.data-table tr:hover { background: #F8FAFC; }
+
+/* Priority Badge */
+.priority { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.priority-high { background: #FEE2E2; color: #991B1B; }
+.priority-medium { background: #FEF3C7; color: #92400E; }
+.priority-low { background: #D1FAE5; color: #065F46; }
+
+/* Sentiment */
+.sentiment { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; }
+.sentiment-dot { width: 8px; height: 8px; border-radius: 50%; }
+.sentiment-positive .sentiment-dot { background: var(--success); }
+.sentiment-neutral .sentiment-dot { background: var(--warning); }
+.sentiment-negative .sentiment-dot { background: var(--danger); }
+
+/* Action Items */
+.action-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.action-check { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; }
+.action-check.done { background: var(--success); border-color: var(--success); color: white; font-size: 12px; }
+.action-content { flex: 1; }
+.action-title { font-size: 13px; font-weight: 600; }
+.action-meta { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+/* Heatmap */
+.heatmap { display: grid; grid-template-columns: 140px repeat(7, 1fr); gap: 2px; font-size: 11px; }
+.heatmap-label { padding: 6px 8px; font-weight: 600; display: flex; align-items: center; }
+.heatmap-cell { padding: 6px; text-align: center; border-radius: 3px; font-weight: 600; }
+.heat-0 { background: #F1F5F9; color: var(--text-light); }
+.heat-1 { background: #DBEAFE; color: #1E40AF; }
+.heat-2 { background: #93C5FD; color: #1E3A5F; }
+.heat-3 { background: #3B82F6; color: white; }
+.heat-4 { background: #1D4ED8; color: white; }
+.heat-5 { background: #1E3A8A; color: white; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .pipeline { grid-template-columns: 1fr; }
+  .insight-grid { grid-template-columns: 1fr; }
+  .heatmap { grid-template-columns: 100px repeat(7, 1fr); font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Interview Tracker & Insights</h1>
+  <div class="header-actions">
+    <select id="projectSelect">
+      <option value="merchandising">Project: Merchandising</option>
+      <option value="agentic_commerce">Project: Agentic Commerce</option>
+    </select>
+    <button class="btn btn-accent" onclick="showNewInterview()">+ New Interview</button>
+    <button class="btn btn-outline" onclick="exportInsights()">Export Report</button>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showPanel('pipeline')">Pipeline</div>
+  <div class="tab" onclick="showPanel('insights')">Insight Analysis</div>
+  <div class="tab" onclick="showPanel('themes')">Theme Clusters</div>
+  <div class="tab" onclick="showPanel('actions')">Action Items</div>
+  <div class="tab" onclick="showPanel('heatmap')">Coverage Heatmap</div>
+</div>
+
+<div class="container">
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-value">12</div>
+      <div class="kpi-label">Total Interviews</div>
+      <div class="kpi-change up">+3 this week</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value">4</div>
+      <div class="kpi-label">Scheduled</div>
+      <div class="kpi-change">Next: Feb 24</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value">23</div>
+      <div class="kpi-label">Key Insights</div>
+      <div class="kpi-change up">+8 extracted</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value">7</div>
+      <div class="kpi-label">Pain Points</div>
+      <div class="kpi-change">3 critical</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value">3</div>
+      <div class="kpi-label">Design Partners</div>
+      <div class="kpi-change up">+1 confirmed</div>
+    </div>
+  </div>
+
+  <!-- Panel: Pipeline -->
+  <div class="panel active" id="panel-pipeline">
+    <div class="pipeline">
+      <div class="pipeline-col col-scheduled">
+        <div class="pipeline-header">Scheduled <span class="count">4</span></div>
+        <div class="pipeline-body">
+          <div class="interview-card">
+            <div class="ic-company">Honeywell</div>
+            <div class="ic-contact">Sarah Chen — VP Product</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 24, 2:00 PM</span>
+              <span class="ic-tag tag-enterprise">Enterprise</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">Schneider Electric</div>
+            <div class="ic-contact">Marc Dubois — Dir. Commerce</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 25, 10:00 AM</span>
+              <span class="ic-tag tag-enterprise">Enterprise</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">Twilio</div>
+            <div class="ic-contact">James Park — PM Lead</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 26, 3:00 PM</span>
+              <span class="ic-tag tag-midmarket">Mid-Market</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">DocuSign</div>
+            <div class="ic-contact">Priya Sharma — Head of Billing</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 27, 11:00 AM</span>
+              <span class="ic-tag tag-midmarket">Mid-Market</span>
+              <span class="ic-tag tag-priority">Priority</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-col col-completed">
+        <div class="pipeline-header">Completed <span class="count">5</span></div>
+        <div class="pipeline-body">
+          <div class="interview-card">
+            <div class="ic-company">Caterpillar</div>
+            <div class="ic-contact">Mike Johnson — Platform Architect</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 20</span>
+              <span class="ic-tag tag-enterprise">Enterprise</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">Siemens</div>
+            <div class="ic-contact">Anna Mueller — Global Pricing</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 18</span>
+              <span class="ic-tag tag-enterprise">Enterprise</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">GE Digital</div>
+            <div class="ic-contact">Rob Taylor — Commerce Dir.</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 15</span>
+              <span class="ic-tag tag-enterprise">Enterprise</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">Zendesk</div>
+            <div class="ic-contact">Lisa Wang — Billing Ops</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 13</span>
+              <span class="ic-tag tag-midmarket">Mid-Market</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">Palo Alto Networks</div>
+            <div class="ic-contact">David Kim — Rev Ops</div>
+            <div class="ic-meta">
+              <span class="ic-date">Feb 10</span>
+              <span class="ic-tag tag-enterprise">Enterprise</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-col col-analyzing">
+        <div class="pipeline-header">Analyzing <span class="count">2</span></div>
+        <div class="pipeline-body">
+          <div class="interview-card">
+            <div class="ic-company">Caterpillar</div>
+            <div class="ic-contact">Transcript processing...</div>
+            <div class="ic-meta">
+              <span class="ic-date">LLM extraction: 80%</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">Siemens</div>
+            <div class="ic-contact">Transcript processing...</div>
+            <div class="ic-meta">
+              <span class="ic-date">LLM extraction: 45%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-col col-insights">
+        <div class="pipeline-header">Insights Ready <span class="count">3</span></div>
+        <div class="pipeline-body">
+          <div class="interview-card">
+            <div class="ic-company">GE Digital</div>
+            <div class="ic-contact">8 insights • 3 pain points</div>
+            <div class="ic-meta">
+              <span class="ic-tag tag-priority">Design Partner</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">Zendesk</div>
+            <div class="ic-contact">5 insights • 2 pain points</div>
+            <div class="ic-meta">
+              <span class="ic-date">Review ready</span>
+            </div>
+          </div>
+          <div class="interview-card">
+            <div class="ic-company">Palo Alto Networks</div>
+            <div class="ic-contact">6 insights • 4 pain points</div>
+            <div class="ic-meta">
+              <span class="ic-tag tag-priority">Design Partner</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Insights -->
+  <div class="panel" id="panel-insights">
+    <div class="insight-grid">
+      <div class="insight-card">
+        <h3>Top Customer Quotes</h3>
+        <div class="quote">
+          <div class="quote-text">"Our SAP setup is too rigid for subscription-hybrid models. We need something that handles physical goods and digital in the same transaction."</div>
+          <div class="quote-source">— Mike Johnson, Caterpillar (Feb 20)</div>
+        </div>
+        <div class="quote">
+          <div class="quote-text">"Geo-pricing across 40+ countries with real-time currency adjustments is our number one pain point right now."</div>
+          <div class="quote-source">— Anna Mueller, Siemens (Feb 18)</div>
+        </div>
+        <div class="quote">
+          <div class="quote-text">"We estimate 3-5% revenue leakage from manual volume discount calculations. Any automation here is a massive win."</div>
+          <div class="quote-source">— Rob Taylor, GE Digital (Feb 15)</div>
+        </div>
+        <div class="quote">
+          <div class="quote-text">"The billing team spends 30% of their time reconciling pricing exceptions. That's unsustainable at our growth rate."</div>
+          <div class="quote-source">— Lisa Wang, Zendesk (Feb 13)</div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <h3>Sentiment Analysis by Topic</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Topic</th><th>Sentiment</th><th>Mentions</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dynamic Pricing</td>
+              <td><span class="sentiment sentiment-negative"><span class="sentiment-dot"></span> Frustrated</span></td>
+              <td>12</td>
+            </tr>
+            <tr>
+              <td>Catalog Flexibility</td>
+              <td><span class="sentiment sentiment-negative"><span class="sentiment-dot"></span> Frustrated</span></td>
+              <td>9</td>
+            </tr>
+            <tr>
+              <td>API Integration</td>
+              <td><span class="sentiment sentiment-neutral"><span class="sentiment-dot"></span> Mixed</span></td>
+              <td>7</td>
+            </tr>
+            <tr>
+              <td>Subscription Mgmt</td>
+              <td><span class="sentiment sentiment-positive"><span class="sentiment-dot"></span> Positive</span></td>
+              <td>8</td>
+            </tr>
+            <tr>
+              <td>Promotions Engine</td>
+              <td><span class="sentiment sentiment-negative"><span class="sentiment-dot"></span> Frustrated</span></td>
+              <td>6</td>
+            </tr>
+            <tr>
+              <td>Analytics & Reporting</td>
+              <td><span class="sentiment sentiment-neutral"><span class="sentiment-dot"></span> Mixed</span></td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td>Checkout Experience</td>
+              <td><span class="sentiment sentiment-positive"><span class="sentiment-dot"></span> Positive</span></td>
+              <td>4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="insight-card">
+        <h3>Pain Point Priority Matrix</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Pain Point</th><th>Frequency</th><th>Severity</th><th>Priority</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pricing model rigidity</td>
+              <td>7/8 interviews</td>
+              <td>9.2/10</td>
+              <td><span class="priority priority-high">CRITICAL</span></td>
+            </tr>
+            <tr>
+              <td>Geo-pricing complexity</td>
+              <td>5/8 interviews</td>
+              <td>8.8/10</td>
+              <td><span class="priority priority-high">HIGH</span></td>
+            </tr>
+            <tr>
+              <td>Volume discount errors</td>
+              <td>4/8 interviews</td>
+              <td>8.5/10</td>
+              <td><span class="priority priority-high">HIGH</span></td>
+            </tr>
+            <tr>
+              <td>Promotion rule limits</td>
+              <td>4/8 interviews</td>
+              <td>7.1/10</td>
+              <td><span class="priority priority-medium">MEDIUM</span></td>
+            </tr>
+            <tr>
+              <td>Catalog management overhead</td>
+              <td>3/8 interviews</td>
+              <td>6.8/10</td>
+              <td><span class="priority priority-medium">MEDIUM</span></td>
+            </tr>
+            <tr>
+              <td>Limited API extensibility</td>
+              <td>3/8 interviews</td>
+              <td>6.2/10</td>
+              <td><span class="priority priority-medium">MEDIUM</span></td>
+            </tr>
+            <tr>
+              <td>Reporting gaps</td>
+              <td>2/8 interviews</td>
+              <td>5.5/10</td>
+              <td><span class="priority priority-low">LOW</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="insight-card">
+        <h3>Design Partner Candidates</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Company</th><th>Segment</th><th>Willingness</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>GE Digital</strong></td>
+              <td>Enterprise</td>
+              <td>Eager — offered dev resources</td>
+              <td><span class="priority priority-high">CONFIRMED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Palo Alto Networks</strong></td>
+              <td>Enterprise</td>
+              <td>Interested — pending legal</td>
+              <td><span class="priority priority-medium">PENDING</span></td>
+            </tr>
+            <tr>
+              <td><strong>Caterpillar</strong></td>
+              <td>Enterprise</td>
+              <td>Exploring — needs exec buy-in</td>
+              <td><span class="priority priority-medium">PENDING</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Theme Clusters -->
+  <div class="panel" id="panel-themes">
+    <div class="insight-grid">
+      <div class="insight-card" style="grid-column: 1 / -1;">
+        <h3>Interview Theme Clusters</h3>
+        <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">Themes automatically clustered from interview transcript analysis using LLM extraction. Bar width = mention frequency across all interviews.</p>
+
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Pricing Flexibility & Dynamic Models</span><span>89%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:89%;background:var(--danger);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Multi-Currency & Geo-Pricing</span><span>71%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:71%;background:var(--accent);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Subscription-Commerce Convergence</span><span>67%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:67%;background:var(--accent);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>API-First Architecture</span><span>56%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:56%;background:var(--warning);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Revenue Leakage Prevention</span><span>50%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:50%;background:var(--warning);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Promotion Engine Sophistication</span><span>44%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:44%;background:var(--primary-light);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Catalog Customization & Hierarchy</span><span>39%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:39%;background:var(--primary-light);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Self-Service & Buyer Experience</span><span>33%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:33%;background:var(--primary);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Analytics & Decision Intelligence</span><span>28%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:28%;background:var(--primary);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Compliance & Audit Trails</span><span>17%</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:17%;background:#94A3B8;"></div></div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <h3>Theme Co-occurrence Matrix</h3>
+        <p style="font-size:12px;color:var(--text-light);margin-bottom:12px;">How often themes appear together in the same interview</p>
+        <table class="data-table" style="font-size:11px;">
+          <thead>
+            <tr><th></th><th>Pricing</th><th>Geo</th><th>Subs</th><th>API</th><th>Revenue</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Pricing</strong></td><td style="background:#1D4ED8;color:white;text-align:center;">—</td><td style="background:#3B82F6;color:white;text-align:center;">6</td><td style="background:#93C5FD;text-align:center;">5</td><td style="background:#DBEAFE;text-align:center;">3</td><td style="background:#3B82F6;color:white;text-align:center;">4</td></tr>
+            <tr><td><strong>Geo</strong></td><td style="background:#3B82F6;color:white;text-align:center;">6</td><td style="background:#1D4ED8;color:white;text-align:center;">—</td><td style="background:#DBEAFE;text-align:center;">3</td><td style="background:#DBEAFE;text-align:center;">2</td><td style="background:#93C5FD;text-align:center;">4</td></tr>
+            <tr><td><strong>Subs</strong></td><td style="background:#93C5FD;text-align:center;">5</td><td style="background:#DBEAFE;text-align:center;">3</td><td style="background:#1D4ED8;color:white;text-align:center;">—</td><td style="background:#93C5FD;text-align:center;">5</td><td style="background:#DBEAFE;text-align:center;">2</td></tr>
+            <tr><td><strong>API</strong></td><td style="background:#DBEAFE;text-align:center;">3</td><td style="background:#DBEAFE;text-align:center;">2</td><td style="background:#93C5FD;text-align:center;">5</td><td style="background:#1D4ED8;color:white;text-align:center;">—</td><td style="background:#DBEAFE;text-align:center;">1</td></tr>
+            <tr><td><strong>Revenue</strong></td><td style="background:#3B82F6;color:white;text-align:center;">4</td><td style="background:#93C5FD;text-align:center;">4</td><td style="background:#DBEAFE;text-align:center;">2</td><td style="background:#DBEAFE;text-align:center;">1</td><td style="background:#1D4ED8;color:white;text-align:center;">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="insight-card">
+        <h3>Emerging Themes (Last 2 Weeks)</h3>
+        <div style="margin-top:8px;">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:13px;font-weight:600;">Agentic Commerce / AI Buying</span>
+            <span class="priority priority-high">NEW</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-light);padding:6px 0;">3 interviewees independently mentioned AI agents making purchasing decisions. Strong signal for Agentic Commerce project.</p>
+        </div>
+        <div style="margin-top:12px;">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:13px;font-weight:600;">Composable Commerce Architecture</span>
+            <span class="priority priority-medium">GROWING</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-light);padding:6px 0;">Interest in MACH-aligned architecture increasing. Enterprises want to swap pricing engine without replacing entire stack.</p>
+        </div>
+        <div style="margin-top:12px;">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:13px;font-weight:600;">Real-Time Revenue Recognition</span>
+            <span class="priority priority-medium">GROWING</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-light);padding:6px 0;">CFOs pushing for instant revenue recognition tied to commerce events. Compliance driver for ASC 606.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Action Items -->
+  <div class="panel" id="panel-actions">
+    <div class="insight-grid">
+      <div class="insight-card" style="grid-column: 1 / -1;">
+        <h3>Interview Follow-Up Actions</h3>
+        <div class="action-item">
+          <div class="action-check" onclick="this.classList.toggle('done');this.innerHTML=this.classList.contains('done')?'&#10003;':''"></div>
+          <div class="action-content">
+            <div class="action-title">Send GE Digital design partner agreement</div>
+            <div class="action-meta">Due: Feb 25 • Owner: Errol • Source: GE Digital interview (Feb 15)</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-check" onclick="this.classList.toggle('done');this.innerHTML=this.classList.contains('done')?'&#10003;':''"></div>
+          <div class="action-content">
+            <div class="action-title">Schedule Palo Alto Networks legal review call</div>
+            <div class="action-meta">Due: Feb 26 • Owner: Errol • Source: PANW interview (Feb 10)</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-check" onclick="this.classList.toggle('done');this.innerHTML=this.classList.contains('done')?'&#10003;':''"></div>
+          <div class="action-content">
+            <div class="action-title">Prepare geo-pricing deep dive demo for Siemens</div>
+            <div class="action-meta">Due: Mar 1 • Owner: Engineering • Source: Siemens interview (Feb 18)</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-check" onclick="this.classList.toggle('done');this.innerHTML=this.classList.contains('done')?'&#10003;':''"></div>
+          <div class="action-content">
+            <div class="action-title">Create Caterpillar-specific pricing model POC</div>
+            <div class="action-meta">Due: Mar 5 • Owner: Engineering • Source: Caterpillar interview (Feb 20)</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-check" onclick="this.classList.toggle('done');this.innerHTML=this.classList.contains('done')?'&#10003;':''"></div>
+          <div class="action-content">
+            <div class="action-title">Share subscription-hybrid pricing roadmap with Zendesk</div>
+            <div class="action-meta">Due: Mar 3 • Owner: Errol • Source: Zendesk interview (Feb 13)</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-check" onclick="this.classList.toggle('done');this.innerHTML=this.classList.contains('done')?'&#10003;':''"></div>
+          <div class="action-content">
+            <div class="action-title">Compile volume discount use cases for PRD section</div>
+            <div class="action-meta">Due: Feb 28 • Owner: Errol • Source: Multiple interviews</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-check" onclick="this.classList.toggle('done');this.innerHTML=this.classList.contains('done')?'&#10003;':''"></div>
+          <div class="action-content">
+            <div class="action-title">Draft Agentic Commerce project brief based on interview signals</div>
+            <div class="action-meta">Due: Mar 1 • Owner: Errol • Source: 3 interview mentions</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-check" onclick="this.classList.toggle('done');this.innerHTML=this.classList.contains('done')?'&#10003;':''"></div>
+          <div class="action-content">
+            <div class="action-title">Request Caterpillar exec sponsor introduction</div>
+            <div class="action-meta">Due: Mar 3 • Owner: Errol • Source: Caterpillar interview (Feb 20)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Coverage Heatmap -->
+  <div class="panel" id="panel-heatmap">
+    <div class="insight-card" style="margin-bottom:16px;">
+      <h3>Interview Coverage Heatmap</h3>
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">Shows which capability areas have been discussed in each customer interview. Darker = more in-depth coverage. Use to identify research gaps.</p>
+      <div class="heatmap">
+        <div class="heatmap-label" style="font-weight:700;color:var(--text-light);font-size:10px;">COMPANY</div>
+        <div class="heatmap-label" style="font-size:10px;justify-content:center;">Dynamic<br>Pricing</div>
+        <div class="heatmap-label" style="font-size:10px;justify-content:center;">Catalog<br>Mgmt</div>
+        <div class="heatmap-label" style="font-size:10px;justify-content:center;">Promo<br>Engine</div>
+        <div class="heatmap-label" style="font-size:10px;justify-content:center;">Sub<br>Billing</div>
+        <div class="heatmap-label" style="font-size:10px;justify-content:center;">API &<br>Headless</div>
+        <div class="heatmap-label" style="font-size:10px;justify-content:center;">Order<br>Mgmt</div>
+        <div class="heatmap-label" style="font-size:10px;justify-content:center;">Analytics</div>
+
+        <div class="heatmap-label">Caterpillar</div>
+        <div class="heatmap-cell heat-5">5</div>
+        <div class="heatmap-cell heat-3">3</div>
+        <div class="heatmap-cell heat-2">2</div>
+        <div class="heatmap-cell heat-4">4</div>
+        <div class="heatmap-cell heat-3">3</div>
+        <div class="heatmap-cell heat-1">1</div>
+        <div class="heatmap-cell heat-2">2</div>
+
+        <div class="heatmap-label">Siemens</div>
+        <div class="heatmap-cell heat-5">5</div>
+        <div class="heatmap-cell heat-2">2</div>
+        <div class="heatmap-cell heat-1">1</div>
+        <div class="heatmap-cell heat-3">3</div>
+        <div class="heatmap-cell heat-2">2</div>
+        <div class="heatmap-cell heat-0">0</div>
+        <div class="heatmap-cell heat-1">1</div>
+
+        <div class="heatmap-label">GE Digital</div>
+        <div class="heatmap-cell heat-4">4</div>
+        <div class="heatmap-cell heat-4">4</div>
+        <div class="heatmap-cell heat-3">3</div>
+        <div class="heatmap-cell heat-2">2</div>
+        <div class="heatmap-cell heat-4">4</div>
+        <div class="heatmap-cell heat-3">3</div>
+        <div class="heatmap-cell heat-3">3</div>
+
+        <div class="heatmap-label">Zendesk</div>
+        <div class="heatmap-cell heat-3">3</div>
+        <div class="heatmap-cell heat-1">1</div>
+        <div class="heatmap-cell heat-4">4</div>
+        <div class="heatmap-cell heat-5">5</div>
+        <div class="heatmap-cell heat-2">2</div>
+        <div class="heatmap-cell heat-1">1</div>
+        <div class="heatmap-cell heat-2">2</div>
+
+        <div class="heatmap-label">Palo Alto</div>
+        <div class="heatmap-cell heat-4">4</div>
+        <div class="heatmap-cell heat-3">3</div>
+        <div class="heatmap-cell heat-2">2</div>
+        <div class="heatmap-cell heat-3">3</div>
+        <div class="heatmap-cell heat-5">5</div>
+        <div class="heatmap-cell heat-2">2</div>
+        <div class="heatmap-cell heat-4">4</div>
+
+        <div class="heatmap-label" style="font-weight:700;border-top:2px solid var(--border);padding-top:8px;">COVERAGE</div>
+        <div class="heatmap-cell heat-5" style="border-top:2px solid var(--border);padding-top:8px;">84%</div>
+        <div class="heatmap-cell heat-2" style="border-top:2px solid var(--border);padding-top:8px;">52%</div>
+        <div class="heatmap-cell heat-2" style="border-top:2px solid var(--border);padding-top:8px;">48%</div>
+        <div class="heatmap-cell heat-3" style="border-top:2px solid var(--border);padding-top:8px;">68%</div>
+        <div class="heatmap-cell heat-3" style="border-top:2px solid var(--border);padding-top:8px;">64%</div>
+        <div class="heatmap-cell heat-0" style="border-top:2px solid var(--border);padding-top:8px;">28%</div>
+        <div class="heatmap-cell heat-2" style="border-top:2px solid var(--border);padding-top:8px;">48%</div>
+      </div>
+    </div>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <h3>Coverage Gaps — Action Needed</h3>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;"><strong style="font-size:13px;">Order Management</strong><span class="priority priority-high">28% coverage</span></div>
+          <p style="font-size:12px;color:var(--text-light);margin-top:4px;">Only lightly touched in 2 interviews. Add targeted questions to upcoming Honeywell and Schneider calls.</p>
+        </div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;"><strong style="font-size:13px;">Promotions Engine</strong><span class="priority priority-medium">48% coverage</span></div>
+          <p style="font-size:12px;color:var(--text-light);margin-top:4px;">Zendesk had deep coverage but others were light. Need enterprise promo use cases from upcoming interviews.</p>
+        </div>
+        <div style="padding:8px 0;">
+          <div style="display:flex;justify-content:space-between;"><strong style="font-size:13px;">Analytics & Reporting</strong><span class="priority priority-medium">48% coverage</span></div>
+          <p style="font-size:12px;color:var(--text-light);margin-top:4px;">Palo Alto and GE had good coverage. Explore analytics needs with DocuSign (scheduled Feb 27).</p>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <h3>Segment Coverage Balance</h3>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Enterprise ($1B+ revenue)</span><span>4 / 8</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:50%;background:var(--primary);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Mid-Market ($100M-$1B)</span><span>2 / 8</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:25%;background:var(--primary-light);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>SMB ($10M-$100M)</span><span>1 / 8</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:12.5%;background:var(--warning);"></div></div>
+        </div>
+        <div class="theme-cluster">
+          <div class="theme-name"><span>Startup (&lt;$10M)</span><span>1 / 8</span></div>
+          <div class="theme-bar"><div class="theme-fill" style="width:12.5%;background:var(--danger);"></div></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-light);margin-top:12px;"><strong>Recommendation:</strong> Prioritize scheduling 2-3 Mid-Market interviews and 1 SMB interview to balance segment representation before Q1 close.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+function showNewInterview() {
+  alert('In production, this opens the interview scheduling form in n8n.\n\nWorkflow: Interview Scheduler (XDvkcIcJrQEiz3ZY)\nTrigger: Manual or auto-detect from survey respondents.');
+}
+function exportInsights() {
+  alert('In production, this triggers the Requirements Generator workflow to compile all interview insights into a PRD or executive summary.\n\nWorkflow: Requirements Generator (B2MSEzPkJa8xdHDg)');
+}
+</script>
+</body>
+</html>

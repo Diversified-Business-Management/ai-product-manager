@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "AI Product Manager - Scoring Configuration",
+    "author": "Errol",
+    "last_updated": "2026-02-21"
+  },
+  "score_weights": {
+    "customer_impact": {
+      "weight": 0.30,
+      "sub_weights": {
+        "breadth_of_customers": 0.50,
+        "severity_of_pain": 0.25,
+        "level_of_pain_mitigation": 0.25
+      }
+    },
+    "business_impact": {
+      "weight": 0.50,
+      "sub_weights": {
+        "new_acv": 0.30,
+        "sales_retention": 0.30,
+        "strategic_value": 0.30,
+        "competitive_usp": 0.10
+      }
+    },
+    "cost_to_implement": {
+      "weight": 0.20,
+      "sub_weights": {
+        "engineering_cost": 0.60,
+        "ability_to_execute": 0.25,
+        "cogs_impact": 0.15
+      }
+    }
+  },
+  "scoring_scale": {
+    "min": 1,
+    "max": 10,
+    "thresholds": {
+      "high_priority": 7.0,
+      "medium_priority": 5.0,
+      "low_priority": 0
+    }
+  },
+  "ai_adjustments": {
+    "survey_demand_boost": {
+      "enabled": true,
+      "description": "Boost score when multiple customers request the same capability",
+      "thresholds": {
+        "3_plus_customers": 0.5,
+        "5_plus_customers": 1.0,
+        "7_plus_customers": 1.5
+      }
+    },
+    "competitive_gap_penalty": {
+      "enabled": true,
+      "description": "Penalize score if competitors already have the capability",
+      "penalty": -0.3
+    },
+    "time_decay": {
+      "enabled": true,
+      "description": "Reduce urgency boost for capabilities planned far out",
+      "decay_rate_per_quarter": 0.1
+    }
+  },
+  "monetization_tiers": {
+    "Core": {"multiplier": 1.0, "description": "Core platform capabilities"},
+    "Commerce 1": {"multiplier": 1.1, "description": "First commerce release"},
+    "Commerce 2": {"multiplier": 0.9, "description": "Future commerce capabilities"},
+    "Ext Studio": {"multiplier": 1.05, "description": "Extension studio capabilities"}
+  },
+  "output_settings": {
+    "report_format": "markdown",
+    "deck_style": "executive",
+    "include_survey_insights": true,
+    "include_ai_recommendations": true
+  }
+}

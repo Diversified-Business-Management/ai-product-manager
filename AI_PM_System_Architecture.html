@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Product Manager — System Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 24px; }
+  h1 { text-align: center; font-size: 28px; font-weight: 700; margin-bottom: 6px; color: #f8fafc; }
+  .subtitle { text-align: center; font-size: 14px; color: #94a3b8; margin-bottom: 32px; }
+  .legend { display: flex; gap: 20px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #94a3b8; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+  .section { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; position: relative; }
+  .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid; }
+  .node { background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 12px; margin-bottom: 10px; transition: all 0.2s; cursor: default; }
+  .node:hover { border-color: #60a5fa; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(96,165,250,0.15); }
+  .node-title { font-size: 14px; font-weight: 600; color: #f1f5f9; margin-bottom: 4px; }
+  .node-desc { font-size: 11px; color: #94a3b8; line-height: 1.4; }
+  .status { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle; }
+  .status-live { background: #065f46; color: #6ee7b7; }
+  .status-partial { background: #78350f; color: #fbbf24; }
+  .status-missing { background: #7f1d1d; color: #fca5a5; }
+  .full-width { grid-column: 1 / -1; }
+  .two-col { grid-column: span 2; }
+  .arrow-section { text-align: center; padding: 10px; font-size: 22px; color: #475569; }
+  .flow-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; flex-wrap: wrap; }
+  .flow-arrow { color: #60a5fa; font-size: 16px; flex-shrink: 0; }
+  .flow-label { font-size: 11px; color: #cbd5e1; background: #1e293b; border: 1px solid #334155; padding: 4px 10px; border-radius: 6px; }
+  .col-input .section-title { border-color: #3b82f6; color: #60a5fa; }
+  .col-process .section-title { border-color: #8b5cf6; color: #a78bfa; }
+  .col-output .section-title { border-color: #10b981; color: #34d399; }
+  .col-data .section-title { border-color: #f59e0b; color: #fbbf24; }
+  .col-rag .section-title { border-color: #ec4899; color: #f472b6; }
+  .connector { position: relative; }
+  .connector::after { content: '→'; position: absolute; right: -14px; top: 50%; transform: translateY(-50%); color: #475569; font-size: 18px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .two-col { grid-column: span 1; } }
+</style>
+</head>
+<body>
+
+<h1>AI-Powered Product Manager</h1>
+<p class="subtitle">Zuora Commerce — Multi-Project Intelligence Platform &nbsp;|&nbsp; System Architecture &nbsp;|&nbsp; Feb 2026</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#065f46"></div> Built &amp; Configured</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#78350f"></div> Partially Built</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7f1d1d"></div> Not Yet Built</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> Input Channels</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> Processing / n8n Workflows</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Output / Reporting</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Data Layer</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div> RAG / AI Engine</div>
+</div>
+
+<div class="grid">
+
+  <!-- INPUT CHANNELS -->
+  <div class="section col-input">
+    <div class="section-title">Input Channels</div>
+    <div class="node">
+      <div class="node-title">Google Form Survey <span class="status status-missing">not built</span></div>
+      <div class="node-desc">20 interview questions across 6 categories (People &amp; Ownership, How You Do It Today, Pain Points, Wish List, UX Demo Feedback). Sent to customers &amp; used internally. Responses flow to merchandising_surveys tab.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Zoom Call Transcripts <span class="status status-partial">partial</span></div>
+      <div class="node-desc">Webhook receives Zoom transcript → downloads → extracts insights → stores in merchandising_interviews. Missing: Zoom API credential, Google Drive credential, Gmail credential.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Transcript / Email / Slack Paste <span class="status status-missing">not built</span></div>
+      <div class="node-desc">Manual paste interface for call transcripts, email threads, Slack conversations. Webhook endpoint → RAG analysis → structured scoring. USER'S #1 PRIORITY.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Design Partner CSV <span class="status status-live">live</span></div>
+      <div class="node-desc">Airtable grid-view export with real customer data from Caterpillar, Honeywell, Zeiss, Asana, Siteimprove, RISCO, Mobilize, bexio, Schibsted.</div>
+    </div>
+  </div>
+
+  <!-- PROCESSING: n8n WORKFLOWS -->
+  <div class="section col-process">
+    <div class="section-title">n8n Workflow Engine (8 Workflows)</div>
+    <div class="node">
+      <div class="node-title">Survey Ingestion Pipeline <span class="status status-live">configured</span></div>
+      <div class="node-desc">Google Form webhook → validate → append to merchandising_surveys tab.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Interview Scheduler <span class="status status-live">configured</span></div>
+      <div class="node-desc">Reads survey responses → identifies willing participants → marks as contacted.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Zoom Transcript Extractor <span class="status status-partial">needs creds</span></div>
+      <div class="node-desc">Zoom webhook → download transcript → extract insights → store in interviews tab → email summary.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Score Change Alerting <span class="status status-live">configured</span></div>
+      <div class="node-desc">Reads current scores → compares to previous snapshot → alerts on significant changes.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Weekly Report Generator <span class="status status-live">configured</span></div>
+      <div class="node-desc">Reads scoring data → generates weekly summary report.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Competitor &amp; TAM Tracker <span class="status status-live">configured</span></div>
+      <div class="node-desc">Reads project config → tracks competitive landscape &amp; TAM data.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Project Scaffolding <span class="status status-live">configured</span></div>
+      <div class="node-desc">Creates new project tabs → registers in config → creates Google Form. Form creation never executed.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Dashboard Sync <span class="status status-live">configured</span></div>
+      <div class="node-desc">Aggregates metrics from all project tabs → writes to _dashboard.</div>
+    </div>
+  </div>
+
+  <!-- OUTPUT & REPORTING -->
+  <div class="section col-output">
+    <div class="section-title">Output &amp; Reporting</div>
+    <div class="node">
+      <div class="node-title">AI PM Master Dashboard <span class="status status-partial">headers only</span></div>
+      <div class="node-desc">_dashboard tab: metric, value, project_slug, updated_date, trend, notes. Currently empty — no data flowing yet.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Capability Score Rankings <span class="status status-missing">not built</span></div>
+      <div class="node-desc">Should mirror original Excel's weighted scoring: Customer Impact (30%), Business Impact (50%), Cost to Implement (20%) with 8 sub-dimensions and 1-10 rubrics. Currently: empty headers only in merchandising_scoring tab.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Score Change Alerts <span class="status status-live">configured</span></div>
+      <div class="node-desc">Email/Slack notifications when capability scores change beyond threshold.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Weekly Intelligence Report <span class="status status-live">configured</span></div>
+      <div class="node-desc">Auto-generated summary of interview insights, score movements, competitive updates.</div>
+    </div>
+    <div class="node">
+      <div class="node-title">Landing Page <span class="status status-partial">exists</span></div>
+      <div class="node-desc">Static HTML page with links to Dashboard, Interview Tracker, Project Wizard, RAG Notebook.</div>
+    </div>
+  </div>
+
+  <!-- DATA LAYER (full width) -->
+  <div class="section col-data full-width">
+    <div class="section-title">Data Layer — Google Sheets (AI PM Master)</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+      <div class="node">
+        <div class="node-title">_config <span class="status status-live">1 row</span></div>
+        <div class="node-desc">project_id, product, pm_name, pm_email, status. form_id = EMPTY.</div>
+      </div>
+      <div class="node">
+        <div class="node-title">_dashboard <span class="status status-missing">empty</span></div>
+        <div class="node-desc">metric, value, project_slug, updated_date, trend, notes.</div>
+      </div>
+      <div class="node">
+        <div class="node-title">merchandising_surveys <span class="status status-missing">empty</span></div>
+        <div class="node-desc">Headers for 19 question responses. No data rows yet.</div>
+      </div>
+      <div class="node">
+        <div class="node-title">merchandising_questions <span class="status status-live">20 rows</span></div>
+        <div class="node-desc">q1–q19 across 6 categories: People &amp; Ownership, How You Do It Today, Pain Points, Wish List, UX Demo Feedback.</div>
+      </div>
+      <div class="node">
+        <div class="node-title">merchandising_scoring <span class="status status-missing">empty</span></div>
+        <div class="node-desc">capability, category, weight, raw_score, weighted_score, confidence, trend. NO scoring rubrics populated.</div>
+      </div>
+      <div class="node">
+        <div class="node-title">merchandising_competitive <span class="status status-missing">empty</span></div>
+        <div class="node-desc">Competitive intelligence tracking. Headers only.</div>
+      </div>
+      <div class="node">
+        <div class="node-title">merchandising_interviews <span class="status status-missing">empty</span></div>
+        <div class="node-desc">Interview insights storage. Headers only.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RAG ENGINE (full width) -->
+  <div class="section col-rag full-width">
+    <div class="section-title">RAG &amp; AI Intelligence Engine — NOT YET BUILT (User's #1 Priority)</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">
+      <div class="node">
+        <div class="node-title">Knowledge Base <span class="status status-missing">not built</span></div>
+        <div class="node-desc">Vector store containing: Zuora Commerce product docs, FY26 Planning spreadsheet (5 scoring sheets), design partner survey data, Merchandising/Pricing/Promotions domain knowledge, scoring rubric definitions (1-10 scales for 8 dimensions).</div>
+      </div>
+      <div class="node">
+        <div class="node-title">Transcript Analysis Engine <span class="status status-missing">not built</span></div>
+        <div class="node-desc">Accepts pasted call transcripts, emails, Slack conversations → chunks and embeds → queries against knowledge base → extracts structured capability signals with confidence scores.</div>
+      </div>
+      <div class="node">
+        <div class="node-title">Scoring Engine <span class="status status-missing">not built</span></div>
+        <div class="node-desc">Maps extracted signals to the 3-tier weighted scoring model: Customer Impact (30%) → Breadth, Severity, Mitigation; Business Impact (50%) → ACV, Retention, Strategic, Competitive; Cost (20%) → Eng Cost, Execute Risk, COGS.</div>
+      </div>
+      <div class="node">
+        <div class="node-title">Webhook API <span class="status status-missing">not built</span></div>
+        <div class="node-desc">n8n webhook endpoint accepting POST requests with transcript text → triggers RAG pipeline → returns structured JSON scores → writes to merchandising_scoring tab.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA FLOW (full width) -->
+  <div class="section full-width" style="background: transparent; border: 1px dashed #334155;">
+    <div class="section-title" style="border-color: #64748b; color: #94a3b8;">Data Flow: End-to-End Pipeline</div>
+    <div class="flow-row">
+      <span class="flow-label" style="border-color:#3b82f6">📋 Google Form / Paste Interface</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#8b5cf6">⚙️ n8n Webhook Trigger</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#ec4899">🧠 RAG: Embed + Retrieve Context</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#ec4899">🎯 LLM: Extract Capability Signals</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#ec4899">📊 Scoring Engine: Apply Weighted Rubrics</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#f59e0b">💾 Google Sheets: merchandising_scoring</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#10b981">📈 Dashboard + Alerts</span>
+    </div>
+    <div class="flow-row" style="margin-top: 12px;">
+      <span class="flow-label" style="border-color:#3b82f6">🎙️ Zoom Transcript Webhook</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#8b5cf6">⚙️ Download + Parse</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#ec4899">🧠 RAG Analysis</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#f59e0b">💾 merchandising_interviews</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#10b981">📧 Email Summary</span>
+    </div>
+    <div class="flow-row" style="margin-top: 12px;">
+      <span class="flow-label" style="border-color:#3b82f6">📄 FY26 Planning Excel (Source of Truth)</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#ec4899">🧠 Vectorized into RAG Knowledge Base</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-label" style="border-color:#ec4899">🎯 Provides scoring rubrics, capability definitions, weights</span>
+    </div>
+  </div>
+
+  <!-- SCORING MODEL (full width) -->
+  <div class="section col-rag full-width">
+    <div class="section-title">Original Scoring Model (From FY26 Planning Excel — Must Be Replicated)</div>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+      <div class="node" style="border-color: #3b82f6;">
+        <div class="node-title" style="color:#60a5fa;">Customer Impact — 30% Weight</div>
+        <div class="node-desc">
+          <strong style="color:#cbd5e1;">Breadth of Customers Impacted (50%)</strong><br>
+          10% impacted = 1 → 100% impacted = 10<br><br>
+          <strong style="color:#cbd5e1;">Severity of Pain (25%)</strong><br>
+          Low Pain/Free Alternatives = 1 → High Pain/Expensive = 10<br><br>
+          <strong style="color:#cbd5e1;">Level of Pain Mitigation (25%)</strong><br>
+          Minimal noticeable = 1 → Exceeds expectation = 10
+        </div>
+      </div>
+      <div class="node" style="border-color: #8b5cf6;">
+        <div class="node-title" style="color:#a78bfa;">Business Impact — 50% Weight</div>
+        <div class="node-desc">
+          <strong style="color:#cbd5e1;">New ACV (30%)</strong><br>
+          No impact = 1 → Top Reason for Winning = 10<br><br>
+          <strong style="color:#cbd5e1;">Sales & Retention (30%)</strong><br>
+          No impact = 1 → Top 1-2 churn reason = 10<br><br>
+          <strong style="color:#cbd5e1;">Strategic Value (30%)</strong><br>
+          Commodity = 1 → Unique to Zuora = 10<br><br>
+          <strong style="color:#cbd5e1;">Competitive USP (10%)</strong><br>
+          No impact = 1 → Reset leader position = 10
+        </div>
+      </div>
+      <div class="node" style="border-color: #10b981;">
+        <div class="node-title" style="color:#34d399;">Cost to Implement — 20% Weight</div>
+        <div class="node-desc">
+          <strong style="color:#cbd5e1;">Engineering Cost (60%)</strong><br>
+          2 Sprints = 2 → 10 Sprints = 10<br><br>
+          <strong style="color:#cbd5e1;">Ability to Execute (25%)</strong><br>
+          No Risk = 1 → Extreme = 10<br><br>
+          <strong style="color:#cbd5e1;">COGS Impact (15%)</strong><br>
+          Scale 1-10 based on operational cost
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 14px; padding: 12px; background: #0f172a; border: 1px solid #7f1d1d; border-radius: 8px;">
+      <div style="font-size: 13px; font-weight: 600; color: #fca5a5; margin-bottom: 4px;">⚠️ Gap: The Google Sheet merchandising_scoring tab has NONE of this detail</div>
+      <div style="font-size: 11px; color: #94a3b8;">The original Excel contains 16 scored capabilities across 3 scoring sheets with full weighted rubrics. The n8n system's scoring tab only has generic headers (capability, category, weight, raw_score, weighted_score) with zero data and no rubric definitions. This needs to be fully rebuilt.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align: center; margin-top: 32px; padding: 16px; color: #64748b; font-size: 11px;">
+  AI Product Manager System Architecture — Generated Feb 24, 2026 — Zuora Commerce / Errol Denger
+</div>
+
+</body>
+</html>

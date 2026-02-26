@@ -1,0 +1,473 @@
+{
+  "stats": {
+    "total_capabilities": 35,
+    "high_priority": 13,
+    "medium_priority": 13,
+    "low_priority": 9,
+    "avg_score": 6.23,
+    "max_score": 9.76,
+    "min_score": 1.43,
+    "std_dev": 1.98
+  },
+  "survey": {
+    "total_respondents": 9,
+    "companies": [
+      "Caterpillar",
+      "Honeywell",
+      "Carl Zeiss AG",
+      "Asana Inc.",
+      "Siteimprove A/S",
+      "RISCO",
+      "Mobilize Financial Services",
+      "bexio",
+      "Schibsted"
+    ]
+  },
+  "top5": [
+    {
+      "rank": 1,
+      "name": "Merchandising V1: Associations & Rules",
+      "tier": "Commerce 1",
+      "priority": "HIGH",
+      "score": 9.76,
+      "customer_impact": 9.0,
+      "business_impact": 8.6,
+      "cost_to_implement": 4.35
+    },
+    {
+      "rank": 2,
+      "name": "Catalog System: Mgmt, Exp, Flexibility",
+      "tier": "Core",
+      "priority": "HIGH",
+      "score": 9.29,
+      "customer_impact": 7.75,
+      "business_impact": 9.2,
+      "cost_to_implement": 4.35
+    },
+    {
+      "rank": 3,
+      "name": "Pricing Waterfall",
+      "tier": "Core",
+      "priority": "HIGH",
+      "score": 9.29,
+      "customer_impact": 7.75,
+      "business_impact": 9.2,
+      "cost_to_implement": 4.35
+    },
+    {
+      "rank": 4,
+      "name": "Journey Orchestration (w Zephr)",
+      "tier": "Commerce 1",
+      "priority": "HIGH",
+      "score": 8.95,
+      "customer_impact": 5.25,
+      "business_impact": 7.4,
+      "cost_to_implement": 6.8
+    },
+    {
+      "rank": 5,
+      "name": "Master Rules",
+      "tier": "Commerce 1",
+      "priority": "HIGH",
+      "score": 8.66,
+      "customer_impact": 9.0,
+      "business_impact": 8.6,
+      "cost_to_implement": 4.35
+    }
+  ],
+  "all_capabilities": [
+    {
+      "rank": 1,
+      "name": "Merchandising V1: Associations & Rules",
+      "tier": "Commerce 1",
+      "priority": "HIGH",
+      "score": 9.76,
+      "customer_impact": 9.0,
+      "business_impact": 8.6
+    },
+    {
+      "rank": 2,
+      "name": "Catalog System: Mgmt, Exp, Flexibility",
+      "tier": "Core",
+      "priority": "HIGH",
+      "score": 9.29,
+      "customer_impact": 7.75,
+      "business_impact": 9.2
+    },
+    {
+      "rank": 3,
+      "name": "Pricing Waterfall",
+      "tier": "Core",
+      "priority": "HIGH",
+      "score": 9.29,
+      "customer_impact": 7.75,
+      "business_impact": 9.2
+    },
+    {
+      "rank": 4,
+      "name": "Journey Orchestration (w Zephr)",
+      "tier": "Commerce 1",
+      "priority": "HIGH",
+      "score": 8.95,
+      "customer_impact": 5.25,
+      "business_impact": 7.4
+    },
+    {
+      "rank": 5,
+      "name": "Master Rules",
+      "tier": "Commerce 1",
+      "priority": "HIGH",
+      "score": 8.66,
+      "customer_impact": 9.0,
+      "business_impact": 8.6
+    },
+    {
+      "rank": 6,
+      "name": "Dynamic Pricing 2 (Master Rules, WFall, Terms)",
+      "tier": "Core",
+      "priority": "HIGH",
+      "score": 8.39,
+      "customer_impact": 6.0,
+      "business_impact": 9.4
+    },
+    {
+      "rank": 7,
+      "name": "AI Optimized catalog: MCP, Data, Automation",
+      "tier": "10X ++",
+      "priority": "HIGH",
+      "score": 8.16,
+      "customer_impact": 8.25,
+      "business_impact": 7.6
+    },
+    {
+      "rank": 8,
+      "name": "Experience & Commerce Storefront",
+      "tier": "Commerce 2",
+      "priority": "HIGH",
+      "score": 8.13,
+      "customer_impact": 6.75,
+      "business_impact": 8.5
+    },
+    {
+      "rank": 9,
+      "name": "AI-powered Function, Decision Tree and Table",
+      "tier": "Ext Studio",
+      "priority": "HIGH",
+      "score": 7.74,
+      "customer_impact": 6.5,
+      "business_impact": 9.1
+    },
+    {
+      "rank": 10,
+      "name": "Bundles",
+      "tier": "Core",
+      "priority": "HIGH",
+      "score": 7.71,
+      "customer_impact": 7.5,
+      "business_impact": 6.9
+    },
+    {
+      "rank": 11,
+      "name": "Promos: Foundation and OOTB Templates",
+      "tier": "Commerce 1",
+      "priority": "HIGH",
+      "score": 7.57,
+      "customer_impact": 7.5,
+      "business_impact": 8.0
+    },
+    {
+      "rank": 12,
+      "name": "Context Management",
+      "tier": "Commerce 1",
+      "priority": "HIGH",
+      "score": 7.48,
+      "customer_impact": 7.0,
+      "business_impact": 7.6
+    },
+    {
+      "rank": 13,
+      "name": "AI Price-Promo Optimization",
+      "tier": "Core",
+      "priority": "HIGH",
+      "score": 7.18,
+      "customer_impact": 5.5,
+      "business_impact": 8.8
+    },
+    {
+      "rank": 14,
+      "name": "Features and Entitlements Completion",
+      "tier": "Core",
+      "priority": "MEDIUM",
+      "score": 6.8,
+      "customer_impact": 6.5,
+      "business_impact": 6.2
+    },
+    {
+      "rank": 15,
+      "name": "Order object hooks",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 6.56,
+      "customer_impact": 8.25,
+      "business_impact": 6.9
+    },
+    {
+      "rank": 16,
+      "name": "Cross-object referencing",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 6.26,
+      "customer_impact": 6.75,
+      "business_impact": 6.0
+    },
+    {
+      "rank": 17,
+      "name": "Enterprise Readiness: Versioning, Audit, etc.",
+      "tier": "Core",
+      "priority": "MEDIUM",
+      "score": 6.21,
+      "customer_impact": 8.0,
+      "business_impact": 5.1
+    },
+    {
+      "rank": 18,
+      "name": "Custom Logic embedded in Workflow",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 6.15,
+      "customer_impact": 6.0,
+      "business_impact": 6.9
+    },
+    {
+      "rank": 19,
+      "name": "Embedded Views",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 6.02,
+      "customer_impact": 6.5,
+      "business_impact": 6.2
+    },
+    {
+      "rank": 20,
+      "name": "Commerce Integration Pattern",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 5.92,
+      "customer_impact": 3.5,
+      "business_impact": 5.4
+    },
+    {
+      "rank": 21,
+      "name": "Experience Widgets",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 5.91,
+      "customer_impact": 5.75,
+      "business_impact": 6.3
+    },
+    {
+      "rank": 22,
+      "name": "Export Logic",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 5.72,
+      "customer_impact": 6.75,
+      "business_impact": 6.4
+    },
+    {
+      "rank": 23,
+      "name": "External Data Lookups [API calls]",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 5.45,
+      "customer_impact": 4.5,
+      "business_impact": 5.6
+    },
+    {
+      "rank": 24,
+      "name": "Versioning",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 5.14,
+      "customer_impact": 6.75,
+      "business_impact": 5.1
+    },
+    {
+      "rank": 25,
+      "name": "System Health and Telemetry integration",
+      "tier": "Ext Studio",
+      "priority": "MEDIUM",
+      "score": 5.08,
+      "customer_impact": 5.5,
+      "business_impact": 6.0
+    },
+    {
+      "rank": 26,
+      "name": "Bring your own models",
+      "tier": "Core",
+      "priority": "MEDIUM",
+      "score": 5.03,
+      "customer_impact": 4.75,
+      "business_impact": 4.7
+    },
+    {
+      "rank": 27,
+      "name": "Orchestration: Orders, Entitlements.",
+      "tier": "Commerce 2",
+      "priority": "LOW",
+      "score": 4.85,
+      "customer_impact": 4.25,
+      "business_impact": 3.9
+    },
+    {
+      "rank": 28,
+      "name": "Customer Portal",
+      "tier": "Ext Studio",
+      "priority": "LOW",
+      "score": 4.68,
+      "customer_impact": 4.25,
+      "business_impact": 5.0
+    },
+    {
+      "rank": 29,
+      "name": "Omnichannel Orders Capture",
+      "tier": "Commerce 2",
+      "priority": "LOW",
+      "score": 4.57,
+      "customer_impact": 5.0,
+      "business_impact": 5.6
+    },
+    {
+      "rank": 30,
+      "name": "Checkout",
+      "tier": "Ext Studio",
+      "priority": "LOW",
+      "score": 4.16,
+      "customer_impact": 4.0,
+      "business_impact": 4.4
+    },
+    {
+      "rank": 31,
+      "name": "Compare Logic (different versions or definitions)",
+      "tier": "Ext Studio",
+      "priority": "LOW",
+      "score": 4.01,
+      "customer_impact": 3.0,
+      "business_impact": 5.2
+    },
+    {
+      "rank": 32,
+      "name": "Additional scripting language support for Functions: Python and Typescript",
+      "tier": "Ext Studio",
+      "priority": "LOW",
+      "score": 3.91,
+      "customer_impact": 3.0,
+      "business_impact": 4.8
+    },
+    {
+      "rank": 33,
+      "name": "Product Selection",
+      "tier": "Ext Studio",
+      "priority": "LOW",
+      "score": 3.63,
+      "customer_impact": 2.25,
+      "business_impact": 4.1
+    },
+    {
+      "rank": 34,
+      "name": "Testing capability extended to Decision Tree and Table (real-time testing)",
+      "tier": "Ext Studio",
+      "priority": "LOW",
+      "score": 2.4,
+      "customer_impact": 7.61,
+      "business_impact": 0.0
+    },
+    {
+      "rank": 35,
+      "name": "Higher Definition limits",
+      "tier": "Ext Studio",
+      "priority": "LOW",
+      "score": 1.43,
+      "customer_impact": 1.5,
+      "business_impact": 1.6
+    }
+  ],
+  "demand": [
+    {
+      "capability": "Catalog",
+      "count": 9,
+      "pct": 100.0
+    },
+    {
+      "capability": "Commerce Platform",
+      "count": 9,
+      "pct": 100.0
+    },
+    {
+      "capability": "Bundles",
+      "count": 8,
+      "pct": 88.9
+    },
+    {
+      "capability": "Pricing",
+      "count": 8,
+      "pct": 88.9
+    },
+    {
+      "capability": "Promotions",
+      "count": 8,
+      "pct": 88.9
+    },
+    {
+      "capability": "Dynamic Pricing",
+      "count": 8,
+      "pct": 88.9
+    },
+    {
+      "capability": "Journey Orchestration",
+      "count": 7,
+      "pct": 77.8
+    },
+    {
+      "capability": "Features & Entitlements",
+      "count": 5,
+      "pct": 55.6
+    },
+    {
+      "capability": "Storefront",
+      "count": 4,
+      "pct": 44.4
+    },
+    {
+      "capability": "AI Optimization",
+      "count": 3,
+      "pct": 33.3
+    }
+  ],
+  "categories": [
+    {
+      "name": "Core Capabilities",
+      "avg_score": 7.25,
+      "count": 16,
+      "high_count": 10
+    },
+    {
+      "name": "Dynamic Pricing",
+      "avg_score": 8.97,
+      "count": 2,
+      "high_count": 2
+    },
+    {
+      "name": "Custom Logic",
+      "avg_score": 4.99,
+      "count": 12,
+      "high_count": 1
+    },
+    {
+      "name": "Experiences",
+      "avg_score": 4.88,
+      "count": 5,
+      "high_count": 0
+    }
+  ]
+}

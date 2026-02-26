@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI PM | New Project Wizard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --primary: #1F4E79; --primary-light: #2E75B6; --accent: #FF6B35; --success: #059669; --bg: #F8FAFC; --card: #FFF; --text: #1E293B; --text-light: #64748B; --border: #E2E8F0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1F4E79 0%, #2E75B6 50%, #4A90D9 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+.wizard { background: var(--card); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); max-width: 720px; width: 100%; overflow: hidden; }
+.wizard-header { padding: 32px 40px 24px; border-bottom: 1px solid var(--border); }
+.wizard-header h1 { font-size: 24px; color: var(--primary); margin-bottom: 4px; }
+.wizard-header p { font-size: 14px; color: var(--text-light); }
+
+/* Progress */
+.progress-bar { display: flex; padding: 0 40px; margin: 20px 0; gap: 8px; }
+.progress-step { flex: 1; text-align: center; }
+.progress-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--text-light); transition: all 0.3s; margin-bottom: 4px; }
+.progress-step.active .progress-dot { background: var(--primary); border-color: var(--primary); color: white; }
+.progress-step.done .progress-dot { background: var(--success); border-color: var(--success); color: white; }
+.progress-label { font-size: 11px; color: var(--text-light); }
+.progress-step.active .progress-label { color: var(--primary); font-weight: 600; }
+.progress-line { flex: 0 0 auto; width: 40px; height: 2px; background: var(--border); margin-top: 16px; }
+.progress-line.done { background: var(--success); }
+
+/* Steps */
+.wizard-body { padding: 32px 40px; min-height: 340px; }
+.step { display: none; }
+.step.active { display: block; }
+.step h2 { font-size: 18px; color: var(--primary); margin-bottom: 4px; }
+.step .desc { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
+
+/* Form */
+.form-group { margin-bottom: 18px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.form-hint { font-size: 11px; color: var(--text-light); margin-bottom: 6px; }
+.form-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; transition: border 0.2s; }
+.form-input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(46,117,182,0.1); }
+.form-textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; resize: vertical; min-height: 80px; font-family: inherit; }
+.form-textarea:focus { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(46,117,182,0.1); }
+.form-select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: white; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Chips */
+.chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 8px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; user-select: none; }
+.chip:hover { border-color: var(--primary-light); }
+.chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+/* Question Builder */
+.question-list { list-style: none; }
+.question-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; }
+.question-item input { flex: 1; border: none; background: transparent; font-size: 13px; outline: none; }
+.question-remove { color: var(--text-light); cursor: pointer; font-size: 16px; }
+.question-remove:hover { color: var(--danger, #DC2626); }
+.add-question { font-size: 13px; color: var(--primary-light); cursor: pointer; font-weight: 600; margin-top: 8px; display: inline-block; }
+.add-question:hover { color: var(--primary); }
+
+/* Toggle */
+.toggle-group { display: flex; gap: 16px; margin-bottom: 12px; }
+.toggle-item { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.toggle-switch { width: 40px; height: 22px; background: #CBD5E1; border-radius: 11px; position: relative; transition: background 0.3s; }
+.toggle-switch::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: left 0.3s; }
+.toggle-item.on .toggle-switch { background: var(--success); }
+.toggle-item.on .toggle-switch::after { left: 20px; }
+.toggle-label { font-size: 13px; }
+
+/* Footer */
+.wizard-footer { padding: 20px 40px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; background: #FAFBFC; }
+.btn { padding: 10px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-light); }
+.btn-secondary { background: transparent; color: var(--text-light); border: 1px solid var(--border); }
+.btn-secondary:hover { background: #F1F5F9; }
+.btn-accent { background: var(--accent); color: white; }
+.btn-accent:hover { background: #E55A2B; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+/* Review */
+.review-section { margin-bottom: 16px; }
+.review-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.review-value { font-size: 14px; color: var(--text); }
+.review-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.review-chip { font-size: 12px; padding: 3px 10px; background: #DBEAFE; color: #1E40AF; border-radius: 12px; }
+.review-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+
+/* Success */
+.success-view { text-align: center; padding: 40px 0; }
+.success-icon { width: 64px; height: 64px; background: var(--success); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; color: white; margin-bottom: 16px; }
+.success-view h2 { font-size: 22px; color: var(--primary); margin-bottom: 8px; }
+.success-view p { font-size: 14px; color: var(--text-light); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+.success-actions { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<div class="wizard">
+  <div class="wizard-header">
+    <h1>Create New Project</h1>
+    <p>Set up a new research & analysis project in 4 steps</p>
+  </div>
+
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-step active" data-step="1">
+      <div class="progress-dot">1</div>
+      <div class="progress-label">Basics</div>
+    </div>
+    <div class="progress-line"></div>
+    <div class="progress-step" data-step="2">
+      <div class="progress-dot">2</div>
+      <div class="progress-label">Research</div>
+    </div>
+    <div class="progress-line"></div>
+    <div class="progress-step" data-step="3">
+      <div class="progress-dot">3</div>
+      <div class="progress-label">Analysis</div>
+    </div>
+    <div class="progress-line"></div>
+    <div class="progress-step" data-step="4">
+      <div class="progress-dot">4</div>
+      <div class="progress-label">Review</div>
+    </div>
+  </div>
+
+  <div class="wizard-body">
+    <!-- Step 1: Project Basics -->
+    <div class="step active" id="step-1">
+      <h2>Project Basics</h2>
+      <p class="desc">Define your project name, domain, and ownership.</p>
+      <div class="form-group">
+        <label class="form-label">Project Name</label>
+        <input class="form-input" id="projectName" placeholder="e.g. Merchandising, Agentic Commerce" value="">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Project Description</label>
+        <textarea class="form-textarea" id="projectDesc" placeholder="Brief description of the project scope and goals..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Project Owner</label>
+          <input class="form-input" id="projectOwner" value="Errol Denger">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Owner Email</label>
+          <input class="form-input" id="projectEmail" value="diversifiedbusinessmgmt@gmail.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Business Domain</label>
+        <div class="chip-group" id="domainChips">
+          <div class="chip" onclick="toggleChip(this)">Commerce</div>
+          <div class="chip" onclick="toggleChip(this)">Billing</div>
+          <div class="chip" onclick="toggleChip(this)">Payments</div>
+          <div class="chip" onclick="toggleChip(this)">Subscriptions</div>
+          <div class="chip" onclick="toggleChip(this)">Marketplace</div>
+          <div class="chip" onclick="toggleChip(this)">AI / ML</div>
+          <div class="chip" onclick="toggleChip(this)">Platform</div>
+          <div class="chip" onclick="toggleChip(this)">DevTools</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Research Questions -->
+    <div class="step" id="step-2">
+      <h2>Research Questions</h2>
+      <p class="desc">Define the key questions for your customer survey. These will auto-generate a Google Form.</p>
+      <div class="form-group">
+        <label class="form-label">Survey Questions</label>
+        <div class="form-hint">Add the questions you want to ask customers. These become your Google Form fields.</div>
+        <ul class="question-list" id="questionList">
+          <li class="question-item">
+            <span style="color:var(--text-light);font-size:12px;width:20px;">1.</span>
+            <input value="What are your top capability interests?" placeholder="Enter question...">
+            <span class="question-remove" onclick="removeQuestion(this)">&times;</span>
+          </li>
+          <li class="question-item">
+            <span style="color:var(--text-light);font-size:12px;width:20px;">2.</span>
+            <input value="What pricing features matter most?" placeholder="Enter question...">
+            <span class="question-remove" onclick="removeQuestion(this)">&times;</span>
+          </li>
+          <li class="question-item">
+            <span style="color:var(--text-light);font-size:12px;width:20px;">3.</span>
+            <input value="What are your biggest pain points with current tools?" placeholder="Enter question...">
+            <span class="question-remove" onclick="removeQuestion(this)">&times;</span>
+          </li>
+        </ul>
+        <span class="add-question" onclick="addQuestion()">+ Add Question</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Audience</label>
+        <div class="chip-group" id="audienceChips">
+          <div class="chip" onclick="toggleChip(this)">Enterprise</div>
+          <div class="chip" onclick="toggleChip(this)">Mid-Market</div>
+          <div class="chip" onclick="toggleChip(this)">SMB</div>
+          <div class="chip" onclick="toggleChip(this)">Startup</div>
+          <div class="chip" onclick="toggleChip(this)">Internal Stakeholders</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Interview Key Questions</label>
+        <div class="form-hint">These questions will be used by the LLM to extract structured insights from Zoom transcripts.</div>
+        <textarea class="form-textarea" id="interviewQuestions" placeholder="What specific problems are customers trying to solve?&#10;How do they currently handle this workflow?&#10;What would an ideal solution look like?"></textarea>
+      </div>
+    </div>
+
+    <!-- Step 3: Analysis Configuration -->
+    <div class="step" id="step-3">
+      <h2>Analysis Modules</h2>
+      <p class="desc">Choose which automated analysis pipelines to enable for this project.</p>
+      <div class="form-group">
+        <label class="form-label">Enable Analysis Modules</label>
+        <div style="margin-top:8px;">
+          <div class="toggle-group">
+            <div class="toggle-item on" onclick="toggleSwitch(this)">
+              <div class="toggle-switch"></div>
+              <span class="toggle-label"><strong>Capability Scoring</strong> — Weighted prioritization engine</span>
+            </div>
+          </div>
+          <div class="toggle-group">
+            <div class="toggle-item on" onclick="toggleSwitch(this)">
+              <div class="toggle-switch"></div>
+              <span class="toggle-label"><strong>Competitor Analysis</strong> — SWOT + feature gap tracking</span>
+            </div>
+          </div>
+          <div class="toggle-group">
+            <div class="toggle-item on" onclick="toggleSwitch(this)">
+              <div class="toggle-switch"></div>
+              <span class="toggle-label"><strong>TAM Analysis</strong> — Market sizing by segment</span>
+            </div>
+          </div>
+          <div class="toggle-group">
+            <div class="toggle-item" onclick="toggleSwitch(this)">
+              <div class="toggle-switch"></div>
+              <span class="toggle-label"><strong>Interview Tracking</strong> — Pipeline & insight extraction</span>
+            </div>
+          </div>
+          <div class="toggle-group">
+            <div class="toggle-item" onclick="toggleSwitch(this)">
+              <div class="toggle-switch"></div>
+              <span class="toggle-label"><strong>RAG Knowledge Base</strong> — Query across all project data</span>
+            </div>
+          </div>
+          <div class="toggle-group">
+            <div class="toggle-item on" onclick="toggleSwitch(this)">
+              <div class="toggle-switch"></div>
+              <span class="toggle-label"><strong>Weekly Reports</strong> — Automated email summaries</span>
+            </div>
+          </div>
+          <div class="toggle-group">
+            <div class="toggle-item on" onclick="toggleSwitch(this)">
+              <div class="toggle-switch"></div>
+              <span class="toggle-label"><strong>Score Alerting</strong> — Priority change notifications</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Competitors to Track</label>
+        <textarea class="form-textarea" id="competitors" placeholder="e.g. Salesforce CPQ, SAP Commerce, Stripe Billing, Chargebee, Recurly"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Scoring Weight: Customer Impact</label>
+          <input class="form-input" type="number" id="weightCustomer" value="30" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Scoring Weight: Business Impact</label>
+          <input class="form-input" type="number" id="weightBusiness" value="50" min="0" max="100">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Review -->
+    <div class="step" id="step-4">
+      <div id="reviewView">
+        <h2>Review & Launch</h2>
+        <p class="desc">Confirm your project configuration before creating.</p>
+        <div id="reviewContent"></div>
+      </div>
+      <div id="successView" class="success-view" style="display:none;">
+        <div class="success-icon">&#10003;</div>
+        <h2>Project Created!</h2>
+        <p>Your project has been submitted to the n8n scaffolding workflow. The following will be auto-created in the next 60 seconds:</p>
+        <div style="text-align:left;max-width:360px;margin:16px auto;font-size:13px;">
+          <div style="padding:6px 0;border-bottom:1px solid var(--border);">&#10003; Google Sheet worksheet tab</div>
+          <div style="padding:6px 0;border-bottom:1px solid var(--border);">&#10003; Customer survey Google Form</div>
+          <div style="padding:6px 0;border-bottom:1px solid var(--border);">&#10003; Scoring engine configuration</div>
+          <div style="padding:6px 0;border-bottom:1px solid var(--border);">&#10003; Weekly report schedule</div>
+          <div style="padding:6px 0;border-bottom:1px solid var(--border);">&#10003; Score change alerting</div>
+          <div style="padding:6px 0;">&#10003; Analysis module pipelines</div>
+        </div>
+        <div class="success-actions">
+          <button class="btn btn-primary" onclick="window.location.href='master_dashboard.html'">Open Dashboard</button>
+          <button class="btn btn-secondary" onclick="resetWizard()">Create Another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wizard-footer" id="wizardFooter">
+    <button class="btn btn-secondary" id="btnBack" onclick="prevStep()" disabled>Back</button>
+    <button class="btn btn-primary" id="btnNext" onclick="nextStep()">Next</button>
+  </div>
+</div>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+
+function nextStep() {
+  if (currentStep === totalSteps) {
+    launchProject();
+    return;
+  }
+  if (currentStep === totalSteps - 1) buildReview();
+  currentStep++;
+  updateUI();
+}
+
+function prevStep() {
+  if (currentStep > 1) { currentStep--; updateUI(); }
+}
+
+function updateUI() {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + currentStep).classList.add('active');
+
+  document.querySelectorAll('.progress-step').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i + 1 === currentStep) s.classList.add('active');
+    else if (i + 1 < currentStep) s.classList.add('done');
+  });
+  document.querySelectorAll('.progress-line').forEach((l, i) => {
+    l.classList.toggle('done', i + 1 < currentStep);
+  });
+
+  document.getElementById('btnBack').disabled = currentStep === 1;
+  document.getElementById('btnNext').textContent = currentStep === totalSteps ? 'Create Project' : 'Next';
+  if (currentStep === totalSteps) document.getElementById('btnNext').className = 'btn btn-accent';
+  else document.getElementById('btnNext').className = 'btn btn-primary';
+}
+
+function toggleChip(el) { el.classList.toggle('selected'); }
+function toggleSwitch(el) { el.classList.toggle('on'); }
+
+function addQuestion() {
+  const list = document.getElementById('questionList');
+  const num = list.children.length + 1;
+  const li = document.createElement('li');
+  li.className = 'question-item';
+  li.innerHTML = `<span style="color:var(--text-light);font-size:12px;width:20px;">${num}.</span><input placeholder="Enter question..."><span class="question-remove" onclick="removeQuestion(this)">&times;</span>`;
+  list.appendChild(li);
+}
+
+function removeQuestion(el) {
+  el.closest('.question-item').remove();
+  renumberQuestions();
+}
+
+function renumberQuestions() {
+  document.querySelectorAll('#questionList .question-item').forEach((q, i) => {
+    q.querySelector('span').textContent = (i + 1) + '.';
+  });
+}
+
+function getSelectedChips(containerId) {
+  return Array.from(document.querySelectorAll('#' + containerId + ' .chip.selected')).map(c => c.textContent);
+}
+
+function getEnabledModules() {
+  return Array.from(document.querySelectorAll('.toggle-item.on')).map(t => t.querySelector('.toggle-label strong').textContent);
+}
+
+function getQuestions() {
+  return Array.from(document.querySelectorAll('#questionList input')).map(i => i.value).filter(v => v.trim());
+}
+
+function buildReview() {
+  const name = document.getElementById('projectName').value || 'Untitled';
+  const desc = document.getElementById('projectDesc').value || 'No description';
+  const owner = document.getElementById('projectOwner').value;
+  const domains = getSelectedChips('domainChips');
+  const audience = getSelectedChips('audienceChips');
+  const questions = getQuestions();
+  const modules = getEnabledModules();
+  const competitors = document.getElementById('competitors').value;
+
+  let html = `
+    <div class="review-section"><div class="review-label">Project Name</div><div class="review-value"><strong>${name}</strong></div></div>
+    <div class="review-section"><div class="review-label">Description</div><div class="review-value">${desc}</div></div>
+    <div class="review-section"><div class="review-label">Owner</div><div class="review-value">${owner}</div></div>
+    <div class="review-section"><div class="review-label">Business Domain</div><div class="review-chips">${domains.map(d => `<span class="review-chip">${d}</span>`).join('')}</div></div>
+    <hr class="review-divider">
+    <div class="review-section"><div class="review-label">Survey Questions (${questions.length})</div><div class="review-value">${questions.map((q, i) => `${i + 1}. ${q}`).join('<br>')}</div></div>
+    <div class="review-section"><div class="review-label">Target Audience</div><div class="review-chips">${audience.map(a => `<span class="review-chip">${a}</span>`).join('')}</div></div>
+    <hr class="review-divider">
+    <div class="review-section"><div class="review-label">Enabled Modules (${modules.length})</div><div class="review-chips">${modules.map(m => `<span class="review-chip">${m}</span>`).join('')}</div></div>
+    ${competitors ? `<div class="review-section"><div class="review-label">Competitors</div><div class="review-value">${competitors}</div></div>` : ''}
+  `;
+  document.getElementById('reviewContent').innerHTML = html;
+}
+
+function launchProject() {
+  document.getElementById('reviewView').style.display = 'none';
+  document.getElementById('successView').style.display = 'block';
+  document.getElementById('wizardFooter').style.display = 'none';
+
+  // In production, this POSTs to the n8n Project Scaffolding webhook
+  const payload = {
+    project_name: document.getElementById('projectName').value,
+    description: document.getElementById('projectDesc').value,
+    owner: document.getElementById('projectOwner').value,
+    email: document.getElementById('projectEmail').value,
+    domains: getSelectedChips('domainChips'),
+    questions: getQuestions(),
+    audience: getSelectedChips('audienceChips'),
+    modules: getEnabledModules(),
+    competitors: document.getElementById('competitors').value,
+    weights: {
+      customer_impact: parseInt(document.getElementById('weightCustomer').value),
+      business_impact: parseInt(document.getElementById('weightBusiness').value),
+    }
+  };
+  console.log('Project payload for n8n webhook:', JSON.stringify(payload, null, 2));
+}
+
+function resetWizard() {
+  currentStep = 1;
+  document.getElementById('reviewView').style.display = 'block';
+  document.getElementById('successView').style.display = 'none';
+  document.getElementById('wizardFooter').style.display = 'flex';
+  document.getElementById('projectName').value = '';
+  document.getElementById('projectDesc').value = '';
+  updateUI();
+}
+</script>
+</body>
+</html>

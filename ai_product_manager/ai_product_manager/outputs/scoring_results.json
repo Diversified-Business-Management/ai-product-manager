@@ -1,0 +1,1032 @@
+{
+  "summary": {
+    "total_capabilities": 35,
+    "high_priority": 13,
+    "medium_priority": 13,
+    "low_priority": 9,
+    "avg_score": 6.23,
+    "max_score": 9.76,
+    "min_score": 1.43,
+    "std_dev": 1.98
+  },
+  "capabilities": [
+    {
+      "name": "Merchandising V1: Associations & Rules",
+      "tier": "Commerce 1",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 9.0,
+        "business_impact": 8.6,
+        "cost_to_implement": 4.35,
+        "base_total": 7.87,
+        "ai_adjusted": 8.87,
+        "final": 9.76
+      },
+      "raw_inputs": {
+        "breadth": 9.0,
+        "severity": 10.0,
+        "mitigation": 8.0,
+        "new_acv": 9.0,
+        "sales_retention": 9.0,
+        "strategic_value": 8.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 6.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 5,
+      "matched_survey_capability": "Features & Entitlements",
+      "priority": "HIGH",
+      "rank": 1
+    },
+    {
+      "name": "Catalog System: Mgmt, Exp, Flexibility",
+      "tier": "Core",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 7.75,
+        "business_impact": 9.2,
+        "cost_to_implement": 4.35,
+        "base_total": 7.79,
+        "ai_adjusted": 9.29,
+        "final": 9.29
+      },
+      "raw_inputs": {
+        "breadth": 8.0,
+        "severity": 7.0,
+        "mitigation": 8.0,
+        "new_acv": 9.0,
+        "sales_retention": 9.0,
+        "strategic_value": 10.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 6.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 9,
+      "matched_survey_capability": "Catalog",
+      "priority": "HIGH",
+      "rank": 2
+    },
+    {
+      "name": "Pricing Waterfall",
+      "tier": "Core",
+      "sheet": "pricing",
+      "scores": {
+        "customer_impact": 7.75,
+        "business_impact": 9.2,
+        "cost_to_implement": 4.35,
+        "base_total": 7.79,
+        "ai_adjusted": 9.29,
+        "final": 9.29
+      },
+      "raw_inputs": {
+        "breadth": 8.0,
+        "severity": 7.0,
+        "mitigation": 8.0,
+        "new_acv": 9.0,
+        "sales_retention": 9.0,
+        "strategic_value": 10.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 6.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 8,
+      "matched_survey_capability": "Dynamic Pricing",
+      "priority": "HIGH",
+      "rank": 3
+    },
+    {
+      "name": "Journey Orchestration (w Zephr)",
+      "tier": "Commerce 1",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 5.25,
+        "business_impact": 7.4,
+        "cost_to_implement": 6.8,
+        "base_total": 6.63,
+        "ai_adjusted": 8.13,
+        "final": 8.95
+      },
+      "raw_inputs": {
+        "breadth": 5.0,
+        "severity": 5.0,
+        "mitigation": 6.0,
+        "new_acv": 6.0,
+        "sales_retention": 6.0,
+        "strategic_value": 10.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 8.0,
+        "ability_to_execute": 8.0
+      },
+      "survey_demand": 7,
+      "matched_survey_capability": "Journey Orchestration",
+      "priority": "HIGH",
+      "rank": 4
+    },
+    {
+      "name": "Master Rules",
+      "tier": "Commerce 1",
+      "sheet": "pricing",
+      "scores": {
+        "customer_impact": 9.0,
+        "business_impact": 8.6,
+        "cost_to_implement": 4.35,
+        "base_total": 7.87,
+        "ai_adjusted": 7.87,
+        "final": 8.66
+      },
+      "raw_inputs": {
+        "breadth": 9.0,
+        "severity": 10.0,
+        "mitigation": 8.0,
+        "new_acv": 9.0,
+        "sales_retention": 9.0,
+        "strategic_value": 8.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 6.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "HIGH",
+      "rank": 5
+    },
+    {
+      "name": "Dynamic Pricing 2 (Master Rules, WFall, Terms)",
+      "tier": "Core",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 6.0,
+        "business_impact": 9.4,
+        "cost_to_implement": 1.95,
+        "base_total": 6.89,
+        "ai_adjusted": 8.39,
+        "final": 8.39
+      },
+      "raw_inputs": {
+        "breadth": 4.0,
+        "severity": 6.0,
+        "mitigation": 10.0,
+        "new_acv": 9.0,
+        "sales_retention": 9.0,
+        "strategic_value": 10.0,
+        "competitive_usp": 10.0,
+        "engineering_cost": 2.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 8,
+      "matched_survey_capability": "Dynamic Pricing",
+      "priority": "HIGH",
+      "rank": 6
+    },
+    {
+      "name": "AI Optimized catalog: MCP, Data, Automation",
+      "tier": "10X ++",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 8.25,
+        "business_impact": 7.6,
+        "cost_to_implement": 1.95,
+        "base_total": 6.67,
+        "ai_adjusted": 8.16,
+        "final": 8.16
+      },
+      "raw_inputs": {
+        "breadth": 9.0,
+        "severity": 7.0,
+        "mitigation": 8.0,
+        "new_acv": 6.0,
+        "sales_retention": 6.0,
+        "strategic_value": 10.0,
+        "competitive_usp": 10.0,
+        "engineering_cost": 2.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 9,
+      "matched_survey_capability": "AI Optimization",
+      "priority": "HIGH",
+      "rank": 7
+    },
+    {
+      "name": "Experience & Commerce Storefront",
+      "tier": "Commerce 2",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 6.75,
+        "business_impact": 8.5,
+        "cost_to_implement": 6.3,
+        "base_total": 7.54,
+        "ai_adjusted": 9.04,
+        "final": 8.13
+      },
+      "raw_inputs": {
+        "breadth": 7.0,
+        "severity": 7.0,
+        "mitigation": 6.0,
+        "new_acv": 9.0,
+        "sales_retention": 6.0,
+        "strategic_value": 10.0,
+        "competitive_usp": 10.0,
+        "engineering_cost": 8.0,
+        "ability_to_execute": 6.0
+      },
+      "survey_demand": 9,
+      "matched_survey_capability": "Commerce Platform",
+      "priority": "HIGH",
+      "rank": 8
+    },
+    {
+      "name": "AI-powered Function, Decision Tree and Table",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q1 26'",
+      "notes": "Natural language Custom Logic (Co-pilot and Agent) part of R50",
+      "scores": {
+        "customer_impact": 6.5,
+        "business_impact": 9.1,
+        "cost_to_implement": 4.85,
+        "base_total": 7.47,
+        "ai_adjusted": 7.37,
+        "final": 7.74
+      },
+      "survey_demand": 0,
+      "priority": "HIGH",
+      "rank": 9
+    },
+    {
+      "name": "Bundles",
+      "tier": "Core",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 7.5,
+        "business_impact": 6.9,
+        "cost_to_implement": 2.55,
+        "base_total": 6.21,
+        "ai_adjusted": 7.71,
+        "final": 7.71
+      },
+      "raw_inputs": {
+        "breadth": 7.0,
+        "severity": 8.0,
+        "mitigation": 8.0,
+        "new_acv": 8.0,
+        "sales_retention": 7.0,
+        "strategic_value": 6.0,
+        "competitive_usp": 6.0,
+        "engineering_cost": 3.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 8,
+      "matched_survey_capability": "Bundles",
+      "priority": "HIGH",
+      "rank": 10
+    },
+    {
+      "name": "Promos: Foundation and OOTB Templates",
+      "tier": "Commerce 1",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 7.5,
+        "business_impact": 8.0,
+        "cost_to_implement": 3.15,
+        "base_total": 6.88,
+        "ai_adjusted": 6.88,
+        "final": 7.57
+      },
+      "raw_inputs": {
+        "breadth": 8.0,
+        "severity": 8.0,
+        "mitigation": 6.0,
+        "new_acv": 9.0,
+        "sales_retention": 7.0,
+        "strategic_value": 8.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 4.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "HIGH",
+      "rank": 11
+    },
+    {
+      "name": "Context Management",
+      "tier": "Commerce 1",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 7.0,
+        "business_impact": 7.6,
+        "cost_to_implement": 4.5,
+        "base_total": 6.8,
+        "ai_adjusted": 6.8,
+        "final": 7.48
+      },
+      "raw_inputs": {
+        "breadth": 7.0,
+        "severity": 6.0,
+        "mitigation": 8.0,
+        "new_acv": 6.0,
+        "sales_retention": 6.0,
+        "strategic_value": 10.0,
+        "competitive_usp": 10.0,
+        "engineering_cost": 5.0,
+        "ability_to_execute": 6.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "HIGH",
+      "rank": 12
+    },
+    {
+      "name": "AI Price-Promo Optimization",
+      "tier": "Core",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 5.5,
+        "business_impact": 8.8,
+        "cost_to_implement": 3.15,
+        "base_total": 6.68,
+        "ai_adjusted": 7.18,
+        "final": 7.18
+      },
+      "raw_inputs": {
+        "breadth": 5.0,
+        "severity": 6.0,
+        "mitigation": 6.0,
+        "new_acv": 9.0,
+        "sales_retention": 7.0,
+        "strategic_value": 10.0,
+        "competitive_usp": 10.0,
+        "engineering_cost": 4.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 3,
+      "matched_survey_capability": "AI Optimization",
+      "priority": "HIGH",
+      "rank": 13
+    },
+    {
+      "name": "Features and Entitlements Completion",
+      "tier": "Core",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 6.5,
+        "business_impact": 6.2,
+        "cost_to_implement": 3.75,
+        "base_total": 5.8,
+        "ai_adjusted": 6.8,
+        "final": 6.8
+      },
+      "raw_inputs": {
+        "breadth": 6.0,
+        "severity": 6.0,
+        "mitigation": 8.0,
+        "new_acv": 6.0,
+        "sales_retention": 4.0,
+        "strategic_value": 8.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 5.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 5,
+      "matched_survey_capability": "Features & Entitlements",
+      "priority": "MEDIUM",
+      "rank": 14
+    },
+    {
+      "name": "Order object hooks",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q1 26'",
+      "notes": "Critical for Catalog as a 'Consumer'. This will allow users to trigger logic on the Order objects. Specific events required to be provided by the Catalog/Consumer team. 'Intra-Service Hooks' to be eva",
+      "scores": {
+        "customer_impact": 8.25,
+        "business_impact": 6.9,
+        "cost_to_implement": 2.1,
+        "base_total": 6.34,
+        "ai_adjusted": 6.25,
+        "final": 6.56
+      },
+      "survey_demand": 0,
+      "priority": "MEDIUM",
+      "rank": 15
+    },
+    {
+      "name": "Cross-object referencing",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q3-Q4 26'",
+      "notes": "",
+      "scores": {
+        "customer_impact": 6.75,
+        "business_impact": 6.0,
+        "cost_to_implement": 4.7,
+        "base_total": 5.97,
+        "ai_adjusted": 5.97,
+        "final": 6.26
+      },
+      "survey_demand": 0,
+      "priority": "MEDIUM",
+      "rank": 16
+    },
+    {
+      "name": "Enterprise Readiness: Versioning, Audit, etc.",
+      "tier": "Core",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 8.0,
+        "business_impact": 5.1,
+        "cost_to_implement": 6.3,
+        "base_total": 6.21,
+        "ai_adjusted": 6.21,
+        "final": 6.21
+      },
+      "raw_inputs": {
+        "breadth": 9.0,
+        "severity": 6.0,
+        "mitigation": 8.0,
+        "new_acv": 6.0,
+        "sales_retention": 6.0,
+        "strategic_value": 4.0,
+        "competitive_usp": 3.0,
+        "engineering_cost": 8.0,
+        "ability_to_execute": 6.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "MEDIUM",
+      "rank": 17
+    },
+    {
+      "name": "Custom Logic embedded in Workflow",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q1-Q2 26'",
+      "notes": "Logic output as a Workflow Step. WIP",
+      "scores": {
+        "customer_impact": 6.0,
+        "business_impact": 6.9,
+        "cost_to_implement": 4.05,
+        "base_total": 6.06,
+        "ai_adjusted": 5.86,
+        "final": 6.15
+      },
+      "survey_demand": 0,
+      "priority": "MEDIUM",
+      "rank": 18
+    },
+    {
+      "name": "Embedded Views",
+      "tier": "Ext Studio",
+      "sheet": "experiences",
+      "scores": {
+        "customer_impact": 6.5,
+        "business_impact": 6.2,
+        "cost_to_implement": 3.4,
+        "base_total": 5.73,
+        "ai_adjusted": 5.73,
+        "final": 6.02
+      },
+      "raw_inputs": {
+        "breadth": 5.0,
+        "severity": 9.0,
+        "mitigation": 7.0,
+        "new_acv": 6.0,
+        "sales_retention": 4.0,
+        "strategic_value": 8.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 4.0,
+        "ability_to_execute": 4.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "MEDIUM",
+      "rank": 19
+    },
+    {
+      "name": "Commerce Integration Pattern",
+      "tier": "Ext Studio",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 3.5,
+        "business_impact": 5.4,
+        "cost_to_implement": 1.95,
+        "base_total": 4.14,
+        "ai_adjusted": 5.64,
+        "final": 5.92
+      },
+      "raw_inputs": {
+        "breadth": 2.0,
+        "severity": 6.0,
+        "mitigation": 4.0,
+        "new_acv": 6.0,
+        "sales_retention": 6.0,
+        "strategic_value": 4.0,
+        "competitive_usp": 6.0,
+        "engineering_cost": 2.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 9,
+      "matched_survey_capability": "Commerce Platform",
+      "priority": "MEDIUM",
+      "rank": 20
+    },
+    {
+      "name": "Experience Widgets",
+      "tier": "Ext Studio",
+      "sheet": "experiences",
+      "scores": {
+        "customer_impact": 5.75,
+        "business_impact": 6.3,
+        "cost_to_implement": 3.75,
+        "base_total": 5.62,
+        "ai_adjusted": 5.62,
+        "final": 5.91
+      },
+      "raw_inputs": {
+        "breadth": 3.0,
+        "severity": 8.0,
+        "mitigation": 9.0,
+        "new_acv": 6.0,
+        "sales_retention": 4.0,
+        "strategic_value": 8.0,
+        "competitive_usp": 9.0,
+        "engineering_cost": 5.0,
+        "ability_to_execute": 3.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "MEDIUM",
+      "rank": 21
+    },
+    {
+      "name": "Export Logic",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q1 26'",
+      "notes": "Core Logic Functionality allowing users to export out existing Logic and perform advanced manipulation in external systems such as personal IDE or Excel. Seed as a Data Source",
+      "scores": {
+        "customer_impact": 6.75,
+        "business_impact": 6.4,
+        "cost_to_implement": 1.6,
+        "base_total": 5.54,
+        "ai_adjusted": 5.45,
+        "final": 5.72
+      },
+      "survey_demand": 0,
+      "priority": "MEDIUM",
+      "rank": 22
+    },
+    {
+      "name": "External Data Lookups [API calls]",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q3-Q4 26'",
+      "notes": "",
+      "scores": {
+        "customer_impact": 4.5,
+        "business_impact": 5.6,
+        "cost_to_implement": 5.2,
+        "base_total": 5.19,
+        "ai_adjusted": 5.19,
+        "final": 5.45
+      },
+      "survey_demand": 0,
+      "priority": "MEDIUM",
+      "rank": 23
+    },
+    {
+      "name": "Versioning",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q1 26'",
+      "notes": "Core Enterprise Readiness capability helping users modify an existing logic without re-creating it and rolling back flawed Definitions",
+      "scores": {
+        "customer_impact": 6.75,
+        "business_impact": 5.1,
+        "cost_to_implement": 2.1,
+        "base_total": 4.99,
+        "ai_adjusted": 4.89,
+        "final": 5.14
+      },
+      "survey_demand": 0,
+      "priority": "MEDIUM",
+      "rank": 24
+    },
+    {
+      "name": "System Health and Telemetry integration",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q4- Q1 26'",
+      "notes": "Core Enterprise Readiness capability to monitor Logic performance and health",
+      "scores": {
+        "customer_impact": 5.5,
+        "business_impact": 6.0,
+        "cost_to_implement": 1.45,
+        "base_total": 4.94,
+        "ai_adjusted": 4.84,
+        "final": 5.08
+      },
+      "survey_demand": 0,
+      "priority": "MEDIUM",
+      "rank": 25
+    },
+    {
+      "name": "Bring your own models",
+      "tier": "Core",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 4.75,
+        "business_impact": 4.7,
+        "cost_to_implement": 6.3,
+        "base_total": 5.03,
+        "ai_adjusted": 5.03,
+        "final": 5.03
+      },
+      "raw_inputs": {
+        "breadth": 2.0,
+        "severity": 7.0,
+        "mitigation": 8.0,
+        "new_acv": 6.0,
+        "sales_retention": 3.0,
+        "strategic_value": 4.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 8.0,
+        "ability_to_execute": 6.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "MEDIUM",
+      "rank": 26
+    },
+    {
+      "name": "Orchestration: Orders, Entitlements.",
+      "tier": "Commerce 2",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 4.25,
+        "business_impact": 3.9,
+        "cost_to_implement": 3.3,
+        "base_total": 3.88,
+        "ai_adjusted": 5.38,
+        "final": 4.85
+      },
+      "raw_inputs": {
+        "breadth": 3.0,
+        "severity": 5.0,
+        "mitigation": 6.0,
+        "new_acv": 3.0,
+        "sales_retention": 4.0,
+        "strategic_value": 4.0,
+        "competitive_usp": 6.0,
+        "engineering_cost": 3.0,
+        "ability_to_execute": 6.0
+      },
+      "survey_demand": 7,
+      "matched_survey_capability": "Journey Orchestration",
+      "priority": "LOW",
+      "rank": 27
+    },
+    {
+      "name": "Customer Portal",
+      "tier": "Ext Studio",
+      "sheet": "experiences",
+      "scores": {
+        "customer_impact": 4.25,
+        "business_impact": 5.0,
+        "cost_to_implement": 3.4,
+        "base_total": 4.46,
+        "ai_adjusted": 4.46,
+        "final": 4.68
+      },
+      "raw_inputs": {
+        "breadth": 1.0,
+        "severity": 8.0,
+        "mitigation": 7.0,
+        "new_acv": 6.0,
+        "sales_retention": 6.0,
+        "strategic_value": 3.0,
+        "competitive_usp": 5.0,
+        "engineering_cost": 4.0,
+        "ability_to_execute": 4.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "LOW",
+      "rank": 28
+    },
+    {
+      "name": "Omnichannel Orders Capture",
+      "tier": "Commerce 2",
+      "sheet": "main",
+      "scores": {
+        "customer_impact": 5.0,
+        "business_impact": 5.6,
+        "cost_to_implement": 3.9,
+        "base_total": 5.08,
+        "ai_adjusted": 5.08,
+        "final": 4.57
+      },
+      "raw_inputs": {
+        "breadth": 5.0,
+        "severity": 5.0,
+        "mitigation": 5.0,
+        "new_acv": 6.0,
+        "sales_retention": 6.0,
+        "strategic_value": 4.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 4.0,
+        "ability_to_execute": 6.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "LOW",
+      "rank": 29
+    },
+    {
+      "name": "Checkout",
+      "tier": "Ext Studio",
+      "sheet": "experiences",
+      "scores": {
+        "customer_impact": 4.0,
+        "business_impact": 4.4,
+        "cost_to_implement": 2.8,
+        "base_total": 3.96,
+        "ai_adjusted": 3.96,
+        "final": 4.16
+      },
+      "raw_inputs": {
+        "breadth": 1.0,
+        "severity": 6.0,
+        "mitigation": 8.0,
+        "new_acv": 6.0,
+        "sales_retention": 5.0,
+        "strategic_value": 2.0,
+        "competitive_usp": 5.0,
+        "engineering_cost": 3.0,
+        "ability_to_execute": 4.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "LOW",
+      "rank": 30
+    },
+    {
+      "name": "Compare Logic (different versions or definitions)",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q3 26'",
+      "notes": "Advanced functionality aimed at market solutions parity and solidify user experience",
+      "scores": {
+        "customer_impact": 3.0,
+        "business_impact": 5.2,
+        "cost_to_implement": 1.6,
+        "base_total": 3.82,
+        "ai_adjusted": 3.82,
+        "final": 4.01
+      },
+      "survey_demand": 0,
+      "priority": "LOW",
+      "rank": 31
+    },
+    {
+      "name": "Additional scripting language support for Functions: Python and Typescript",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "Q3 26'",
+      "notes": "Advanced functionality serving more developers in their preferred choice of programming language. Helps with more adoption.",
+      "scores": {
+        "customer_impact": 3.0,
+        "business_impact": 4.8,
+        "cost_to_implement": 2.1,
+        "base_total": 3.72,
+        "ai_adjusted": 3.72,
+        "final": 3.91
+      },
+      "survey_demand": 0,
+      "priority": "LOW",
+      "rank": 32
+    },
+    {
+      "name": "Product Selection",
+      "tier": "Ext Studio",
+      "sheet": "experiences",
+      "scores": {
+        "customer_impact": 2.25,
+        "business_impact": 4.1,
+        "cost_to_implement": 3.65,
+        "base_total": 3.46,
+        "ai_adjusted": 3.46,
+        "final": 3.63
+      },
+      "raw_inputs": {
+        "breadth": 1.0,
+        "severity": 2.0,
+        "mitigation": 5.0,
+        "new_acv": 5.0,
+        "sales_retention": 4.0,
+        "strategic_value": 2.0,
+        "competitive_usp": 8.0,
+        "engineering_cost": 4.0,
+        "ability_to_execute": 5.0
+      },
+      "survey_demand": 0,
+      "matched_survey_capability": null,
+      "priority": "LOW",
+      "rank": 33
+    },
+    {
+      "name": "Testing capability extended to Decision Tree and Table (real-time testing)",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "TBD",
+      "notes": "",
+      "scores": {
+        "customer_impact": 7.61,
+        "business_impact": 0.0,
+        "cost_to_implement": 0.0,
+        "base_total": 2.28,
+        "ai_adjusted": 2.28,
+        "final": 2.4
+      },
+      "survey_demand": 0,
+      "priority": "LOW",
+      "rank": 34
+    },
+    {
+      "name": "Higher Definition limits",
+      "tier": "Ext Studio",
+      "sheet": "custom_logic",
+      "development_quarter": "NA",
+      "notes": "",
+      "scores": {
+        "customer_impact": 1.5,
+        "business_impact": 1.6,
+        "cost_to_implement": 0.55,
+        "base_total": 1.36,
+        "ai_adjusted": 1.36,
+        "final": 1.43
+      },
+      "survey_demand": 0,
+      "priority": "LOW",
+      "rank": 35
+    }
+  ],
+  "survey_insights": {
+    "total_respondents": 9,
+    "companies": [
+      "Caterpillar",
+      "Honeywell",
+      "Carl Zeiss AG",
+      "Asana Inc.",
+      "Siteimprove A/S",
+      "RISCO",
+      "Mobilize Financial Services",
+      "bexio",
+      "Schibsted"
+    ],
+    "capability_demand": {
+      "Catalog": {
+        "demand_count": 9,
+        "requesting_companies": [
+          "Caterpillar",
+          "Honeywell",
+          "Carl Zeiss AG",
+          "Asana Inc.",
+          "Siteimprove A/S",
+          "RISCO",
+          "Mobilize Financial Services",
+          "bexio",
+          "Schibsted"
+        ],
+        "demand_pct": 100.0
+      },
+      "Bundles": {
+        "demand_count": 8,
+        "requesting_companies": [
+          "Honeywell",
+          "Carl Zeiss AG",
+          "Asana Inc.",
+          "Siteimprove A/S",
+          "RISCO",
+          "Mobilize Financial Services",
+          "bexio",
+          "Schibsted"
+        ],
+        "demand_pct": 88.9
+      },
+      "Pricing": {
+        "demand_count": 8,
+        "requesting_companies": [
+          "Caterpillar",
+          "Carl Zeiss AG",
+          "Asana Inc.",
+          "Siteimprove A/S",
+          "RISCO",
+          "Mobilize Financial Services",
+          "bexio",
+          "Schibsted"
+        ],
+        "demand_pct": 88.9
+      },
+      "Promotions": {
+        "demand_count": 8,
+        "requesting_companies": [
+          "Caterpillar",
+          "Honeywell",
+          "Carl Zeiss AG",
+          "Asana Inc.",
+          "RISCO",
+          "Mobilize Financial Services",
+          "bexio",
+          "Schibsted"
+        ],
+        "demand_pct": 88.9
+      },
+      "Storefront": {
+        "demand_count": 4,
+        "requesting_companies": [
+          "Carl Zeiss AG",
+          "RISCO",
+          "Mobilize Financial Services",
+          "bexio"
+        ],
+        "demand_pct": 44.4
+      },
+      "AI Optimization": {
+        "demand_count": 3,
+        "requesting_companies": [
+          "Caterpillar",
+          "Honeywell",
+          "bexio"
+        ],
+        "demand_pct": 33.3
+      },
+      "Dynamic Pricing": {
+        "demand_count": 8,
+        "requesting_companies": [
+          "Caterpillar",
+          "Honeywell",
+          "Asana Inc.",
+          "Siteimprove A/S",
+          "RISCO",
+          "Mobilize Financial Services",
+          "bexio",
+          "Schibsted"
+        ],
+        "demand_pct": 88.9
+      },
+      "Features & Entitlements": {
+        "demand_count": 5,
+        "requesting_companies": [
+          "Honeywell",
+          "Asana Inc.",
+          "Siteimprove A/S",
+          "Mobilize Financial Services",
+          "bexio"
+        ],
+        "demand_pct": 55.6
+      },
+      "Journey Orchestration": {
+        "demand_count": 7,
+        "requesting_companies": [
+          "Honeywell",
+          "Carl Zeiss AG",
+          "Asana Inc.",
+          "RISCO",
+          "Mobilize Financial Services",
+          "bexio",
+          "Schibsted"
+        ],
+        "demand_pct": 77.8
+      },
+      "Commerce Platform": {
+        "demand_count": 9,
+        "requesting_companies": [
+          "Caterpillar",
+          "Honeywell",
+          "Carl Zeiss AG",
+          "Asana Inc.",
+          "Siteimprove A/S",
+          "RISCO",
+          "Mobilize Financial Services",
+          "bexio",
+          "Schibsted"
+        ],
+        "demand_pct": 100.0
+      }
+    },
+    "business_models": {
+      "B2C": 8,
+      "B2B": 8,
+      "B2B2C or B2B2B": 4,
+      "B2 Government": 3
+    },
+    "existing_platforms": {
+      "SAP Commerce": 1,
+      "Custom or Homegrown": 3,
+      "CommerceTools": 1,
+      "Salesforce Commerce Cloud": 2,
+      "Other Platform": 2
+    }
+  }
+}
