@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Manager - Zuora Commerce</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; color: #e2e8f0; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 60px 24px; }
+        .header { text-align: center; margin-bottom: 48px; }
+        .header h1 { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .header p { font-size: 1.1rem; color: #94a3b8; }
+        .badge { display: inline-block; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #818cf8; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; margin-top: 12px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px; }
+        .card { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 16px; padding: 32px; transition: all 0.3s ease; text-decoration: none; color: inherit; display: block; }
+        .card:hover { border-color: rgba(99, 102, 241, 0.4); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px; }
+        .card h2 { font-size: 1.25rem; font-weight: 600; color: #f1f5f9; margin-bottom: 8px; }
+        .card p { font-size: 0.9rem; color: #94a3b8; line-height: 1.6; }
+        .card-tag { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 6px; margin-top: 12px; }
+        .bg-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .bg-purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+        .bg-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .bg-orange { background: rgba(249, 115, 22, 0.15); color: #fb923c; }
+        .footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(148, 163, 184, 0.1); color: #64748b; font-size: 0.85rem; }
+        .footer a { color: #818cf8; text-decoration: none; }
+        .status { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #4ade80; margin-top: 16px; }
+        .status-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Product Manager</h1>
+            <p>Multi-Project Intelligence Platform for Zuora Commerce</p>
+            <div class="badge">Merchandising &bull; Powered by n8n + Google Workspace</div>
+            <div class="status"><span class="status-dot"></span> 8 Workflows Active</div>
+        </div>
+        <div class="grid">
+            <a href="master_dashboard.html" class="card">
+                <div class="card-icon bg-blue">&#128202;</div>
+                <h2>Master Dashboard</h2>
+                <p>Portfolio overview with project KPIs, capability maturity rankings, trend analysis, and executive summary across all managed products.</p>
+                <span class="card-tag bg-blue">Analytics</span>
+            </a>
+            <a href="interview_tracker.html" class="card">
+                <div class="card-icon bg-purple">&#128483;</div>
+                <h2>Interview Tracker</h2>
+                <p>Manage stakeholder interview pipeline, track insights, cluster themes, and surface actionable findings from customer and internal conversations.</p>
+                <span class="card-tag bg-purple">Research</span>
+            </a>
+            <a href="project_wizard.html" class="card">
+                <div class="card-icon bg-green">&#9889;</div>
+                <h2>Project Wizard</h2>
+                <p>Guided new project creation flow. Scaffolds Google Sheets, configures survey forms, and sets up monitoring for new product initiatives.</p>
+                <span class="card-tag bg-green">Setup</span>
+            </a>
+            <a href="rag_notebook_template.html" class="card">
+                <div class="card-icon bg-orange">&#128218;</div>
+                <h2>RAG Notebook</h2>
+                <p>Query interface for project intelligence data. Ask natural language questions about surveys, scores, competitors, and interview insights.</p>
+                <span class="card-tag bg-orange">AI Query</span>
+            </a>
+        </div>
+        <div class="footer">
+            <p>n8n Instance: <a href="https://edenger.app.n8n.cloud" target="_blank">edenger.app.n8n.cloud</a> &bull;
+            Google Sheet: <a href="https://docs.google.com/spreadsheets/d/1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w/edit" target="_blank">AI PM Master</a></p>
+        </div>
+    </div>
+</body>
+</html>
