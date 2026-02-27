@@ -90,6 +90,15 @@
         .powered-by { text-align: center; font-size: 0.7rem; color: #475569; padding: 8px 0 0; }
         .powered-by a { color: #818cf8; text-decoration: none; }
 
+        .sources-section { margin-top: 10px; padding: 10px 14px; background: rgba(249, 115, 22, 0.06); border: 1px solid rgba(249, 115, 22, 0.15); border-radius: 10px; }
+        .sources-header { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #f59e0b; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+        .sources-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .source-chip { font-size: 0.72rem; padding: 3px 10px; border-radius: 6px; background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.2); color: #fb923c; white-space: nowrap; }
+        .confidence-badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; margin-left: auto; font-weight: 600; }
+        .confidence-high { background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+        .confidence-medium { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+        .confidence-low { background: rgba(248, 113, 113, 0.15); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+
         @media (max-width: 600px) {
             .suggestions { grid-template-columns: 1fr; }
             .message { max-width: 95%; }
@@ -183,13 +192,31 @@
             suggestionsGrid.style.display = 'none';
         }
 
-        function addMessage(role, content) {
+        function addMessage(role, content, sources, confidence) {
             const div = document.createElement('div');
             div.className = `message ${role}`;
             const avatar = role === 'assistant' ? '&#129302;' : '&#128100;';
+
+            let sourcesHTML = '';
+            if (role === 'assistant' && sources && sources.length > 0) {
+                const confClass = confidence === 'high' ? 'confidence-high' : confidence === 'medium' ? 'confidence-medium' : 'confidence-low';
+                const confLabel = confidence ? confidence.charAt(0).toUpperCase() + confidence.slice(1) : '';
+                sourcesHTML = `
+                    <div class="sources-section">
+                        <div class="sources-header">
+                            &#128196; Sources referenced
+                            ${confLabel ? `<span class="confidence-badge ${confClass}">${confLabel} confidence</span>` : ''}
+                        </div>
+                        <div class="sources-list">
+                            ${sources.map(s => `<span class="source-chip">${s}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
             div.innerHTML = `
                 <div class="avatar">${avatar}</div>
-                <div class="bubble">${formatContent(content)}</div>
+                <div class="bubble">${formatContent(content)}${sourcesHTML}</div>
             `;
             messagesEl.appendChild(div);
             messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -263,9 +290,11 @@
 
                 const data = await response.json();
                 const answer = data.answer || data.response || data.output || JSON.stringify(data);
+                const sources = data.sources_used || [];
+                const confidence = data.retrieval_confidence || null;
 
                 removeTypingIndicator();
-                addMessage('assistant', answer);
+                addMessage('assistant', answer, sources, confidence);
                 conversationHistory.push({ role: 'assistant', content: answer });
 
             } catch (error) {
