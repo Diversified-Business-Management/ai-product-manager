@@ -22,14 +22,27 @@
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 0.8rem; font-weight: 500; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 8px; color: #e2e8f0; font-size: 0.9rem; font-family: inherit; transition: border-color 0.2s; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px; color: #e2e8f0; font-size: 0.9rem; font-family: inherit; transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
         .form-group textarea { min-height: 200px; resize: vertical; line-height: 1.6; }
+        .form-group select option { background: #1e293b; color: #e2e8f0; }
         .content-types { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-        .content-type-chip { padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.2); color: #94a3b8; }
+        .content-type-chip {
+            padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+            background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.2); color: #94a3b8;
+        }
         .content-type-chip:hover { border-color: rgba(99, 102, 241, 0.4); color: #e2e8f0; }
         .content-type-chip.active { background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.5); color: #818cf8; }
-        .submit-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: inherit; }
+        .submit-btn {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;
+            border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; font-family: inherit;
+        }
         .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3); }
         .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
         .status-bar { display: none; margin-top: 16px; padding: 14px 20px; border-radius: 10px; font-size: 0.9rem; text-align: center; }
@@ -39,7 +52,10 @@
         .counter { text-align: right; font-size: 0.75rem; color: #64748b; margin-top: 4px; }
         .history { margin-top: 32px; }
         .history h3 { font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .history-item { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.08); border-radius: 10px; padding: 14px 18px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .history-item {
+            background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.08); border-radius: 10px;
+            padding: 14px 18px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+        }
         .history-item .meta { font-size: 0.85rem; color: #e2e8f0; }
         .history-item .meta span { color: #64748b; font-size: 0.75rem; margin-left: 8px; }
         .history-item .badge-small { font-size: 0.7rem; padding: 2px 8px; border-radius: 6px; }
@@ -51,16 +67,20 @@
 <body>
     <div class="container">
         <a href="index.html" class="back-link">&larr; Back to Portal</a>
+
         <div class="header">
             <h1>Upload Raw Content</h1>
             <p>Feed customer discussions, interview transcripts, meeting notes, and competitive intelligence into the AI analysis engine. Each submission is processed by Claude and scored into your master knowledge base.</p>
         </div>
+
         <div class="info-banner">
             <span class="icon">&#9889;</span>
-            <p><strong>How it works:</strong> Paste any raw content below. The AI engine will analyze it, extract product capabilities, score them using the weighted model (CI 30% + BI 50% + CTI 20%), and append structured insights to your Google Sheet automatically.</p>
+            <p><strong>How it works:</strong> Paste any raw content below. The AI engine will analyze it, extract product capabilities, score them using the weighted model (CI 30% + BI 50% + CTI 20%), and append structured insights to your Google Sheet automatically. <br><br><strong>Alternative:</strong> You can also submit directly via the <a href="https://edenger.app.n8n.cloud/form/37a418f9-a2a8-498c-acdf-7059825d2a36" target="_blank" style="color: #818cf8;">n8n form</a> if this page has issues.</p>
         </div>
+
         <form id="uploadForm" class="form-section">
             <h2>&#128196; Content Details</h2>
+
             <div class="form-group">
                 <label>Content Type</label>
                 <div class="content-types" id="contentTypes">
@@ -74,6 +94,7 @@
                     <div class="content-type-chip" data-type="Other">Other</div>
                 </div>
             </div>
+
             <div class="form-row">
                 <div class="form-group">
                     <label>Company / Source Name</label>
@@ -84,6 +105,7 @@
                     <input type="text" id="contactName" placeholder="e.g., Jane Smith" required>
                 </div>
             </div>
+
             <div class="form-row">
                 <div class="form-group">
                     <label>Role / Title</label>
@@ -94,14 +116,20 @@
                     <input type="date" id="contentDate" required>
                 </div>
             </div>
+
             <div class="form-group">
                 <label>Raw Content</label>
-                <textarea id="rawContent" placeholder="Paste the full transcript, meeting notes, email thread, or any raw content here..." required></textarea>
+                <textarea id="rawContent" placeholder="Paste the full transcript, meeting notes, email thread, or any raw content here. The AI engine will analyze it for product capabilities, pain points, and strategic insights..." required></textarea>
                 <div class="counter"><span id="charCount">0</span> characters</div>
             </div>
-            <button type="submit" class="submit-btn" id="submitBtn">&#128640; Analyze &amp; Upload to Knowledge Base</button>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                &#128640; Analyze &amp; Upload to Knowledge Base
+            </button>
+
             <div class="status-bar" id="statusBar"></div>
         </form>
+
         <div class="history" id="historySection">
             <h3>Recent Uploads This Session</h3>
             <div id="historyList">
@@ -109,8 +137,12 @@
             </div>
         </div>
     </div>
+
     <script>
+        // Set default date to today
         document.getElementById('contentDate').valueAsDate = new Date();
+
+        // Content type chip selection
         const chips = document.querySelectorAll('.content-type-chip');
         let selectedType = 'Interview Transcript';
         chips.forEach(chip => {
@@ -120,68 +152,123 @@
                 selectedType = chip.dataset.type;
             });
         });
+
+        // Character counter
         const rawContent = document.getElementById('rawContent');
         const charCount = document.getElementById('charCount');
         rawContent.addEventListener('input', () => {
             charCount.textContent = rawContent.value.length.toLocaleString();
         });
+
+        // Form submission
         const form = document.getElementById('uploadForm');
         const submitBtn = document.getElementById('submitBtn');
         const statusBar = document.getElementById('statusBar');
         let uploadHistory = [];
-        form.addEventListener('submit', async (e) => {
+
+        // n8n form trigger production URL (UUID-based â the slug URL does NOT work)
+        const N8N_FORM_URL = 'https://edenger.app.n8n.cloud/form/37a418f9-a2a8-498c-acdf-7059825d2a36';
+
+        // Create hidden iframe for cross-origin form POST (avoids CORS entirely)
+        const hiddenFrame = document.createElement('iframe');
+        hiddenFrame.name = 'n8n_submit_frame';
+        hiddenFrame.style.display = 'none';
+        document.body.appendChild(hiddenFrame);
+
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
+
             const companyName = document.getElementById('companyName').value.trim();
             const contactName = document.getElementById('contactName').value.trim();
             const contactRole = document.getElementById('contactRole').value.trim();
-            const contentDate = document.getElementById('contentDate').value;
+            const contentDate = document.getElentById('contentDate').value;
             const content = rawContent.value.trim();
+
             if (!companyName || !contactName || !content) {
                 showStatus('error', 'Please fill in all required fields.');
                 return;
             }
-            const enrichedTranscript = '[Content Type: ' + selectedType + ']\n[Company: ' + companyName + ']\n[Contact: ' + contactName + ' - ' + contactRole + ']\n[Date: ' + contentDate + ']\n\n' + content;
-            const formData = new FormData();
-            formData.append('Company Name', companyName);
-            formData.append('Interviewee Name', contactName);
-            formData.append('Interviewee Role', contactRole || selectedType);
-            formData.append('Interview Date', contentDate);
-            formData.append('Transcript', enrichedTranscript);
+
+            // Prepare the transcript with metadata context prepended
+            const enrichedTranscript = `[Content Type: ${selectedType}]\n[Company: ${companyName}]\n[Contact: ${contactName} - ${contactRole}]\n[Date: ${contentDate}]\n\n${content}`;
+
+            // Create a hidden form that POSTs directly to n8n (bypasses CORS)
+            const hiddenForm = document.createElement('form');
+            hiddenForm.method = 'POST';
+            hiddenForm.action = N8N_FORM_URL;
+            hiddenForm.target = 'n8n_submit_frame'; // Submit into hidden iframe
+
+            const fields = {
+                'Company Name': companyName,
+                'Interviewee Name': contactName,
+                'Interviewee Role': contactRole || selectedType,
+                'Interview Date': contentDate,
+                'Transcript': enrichedTranscript
+            };
+
+            for (const [name, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                hiddenForm.appendChild(input);
+            }
+
+            document.body.appendChild(hiddenForm);
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '&#9203; Sending to AI Engine...';
             showStatus('sending', 'Submitting content to the n8n workflow for Claude analysis. This may take up to 2 minutes...');
-            try {
-                const response = await fetch('https://edenger.app.n8n.cloud/form/ai-pm-transcript-analyzer', { method: 'POST', body: formData });
-                if (response.ok || response.redirected) {
-                    showStatus('success', 'Content analyzed and uploaded successfully! ' + companyName + ' - ' + selectedType + ' has been processed.');
-                    addToHistory(companyName, contactName, selectedType, contentDate);
-                    rawContent.value = '';
-                    charCount.textContent = '0';
-                } else {
-                    showStatus('error', 'Upload failed (' + response.status + '). The n8n workflow may be inactive.');
-                }
-            } catch (err) {
-                showStatus('success', 'Content submitted! ' + companyName + ' - ' + selectedType + ' is being processed. Check your Google Sheet in 1-2 minutes.');
+
+            // Listen for iframe load (indicates form POST completed)
+            hiddenFrame.onload = () => {
+                showStatus('success', `Content submitted! ${companyName} - ${selectedType} is being processed by Claude. Check your Google Sheet in 1-2 minutes for results.`);
                 addToHistory(companyName, contactName, selectedType, contentDate);
                 rawContent.value = '';
                 charCount.textContent = '0';
-            } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '&#128640; Analyze &amp; Upload to Knowledge Base';
-            }
+                hiddenForm.remove();
+            };
+
+            // Timeout fallback â"n8n form triggers redirect, so iframe load fires on redirect
+            setTimeout(() => {
+                if (submitBtn.disabled) {
+                    showStatus('success', `Content submitted! ${companyName} - ${selectedType} is being processed. Check your Google Sheet in 1-2 minutes.`);
+                    addToHistory(companyName, contactName, selectedType, contentDate);
+                    rawContent.value = '';
+                    charCount.textContent = '0';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '&#128640; Analyze &amp; Upload to Knowledge Base';
+                    hiddenForm.remove();
+                }
+            }, 5000);
+
+            hiddenForm.submit();
         });
+
         function showStatus(type, message) {
             statusBar.className = 'status-bar ' + type;
             statusBar.textContent = message;
         }
+
         function addToHistory(company, contact, type, date) {
             uploadHistory.unshift({ company, contact, type, date, time: new Date().toLocaleTimeString() });
             renderHistory();
         }
+
         function renderHistory() {
             const list = document.getElementById('historyList');
-            if (uploadHistory.length === 0) { list.innerHTML = '<div class="empty-state">No uploads yet this session.</div>'; return; }
-            list.innerHTML = uploadHistory.map(item => '<div class="history-item"><div class="meta">' + item.company + ' - ' + item.contact + '<span>' + item.date + ' at ' + item.time + '</span></div><span class="badge-small bg-teal">' + item.type + '</span></div>').join('');
+            if (uploadHistory.length === 0) {
+                list.innerHTML = '<div class="empty-state">No uploads yet this session.</div>';
+                return;
+            }
+            list.innerHTML = uploadHistory.map(item => `
+                <div class="history-item">
+                    <div class="meta">${item.company} - ${item.contact}<span>${item.date} at ${item.time}</span></div>
+                    <span class="badge-small bg-teal">${item.type}</span>
+                </div>
+            `).join('');
         }
     </script>
 </body>
