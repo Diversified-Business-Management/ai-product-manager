@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Raw Content - AI Product Manager</title>
+    <title>Upload Raw Content - My Product Agent</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; color: #e2e8f0; }
@@ -166,7 +166,7 @@
         const statusBar = document.getElementById('statusBar');
         let uploadHistory = [];
 
-        // n8n form trigger production URL (UUID-based â the slug URL does NOT work)
+        // n8n form trigger production URL (UUID-based — the slug URL does NOT work)
         const N8N_FORM_URL = 'https://edenger.app.n8n.cloud/form/37a418f9-a2a8-498c-acdf-7059825d2a36';
 
         // Create hidden iframe for cross-origin form POST (avoids CORS entirely)
@@ -181,7 +181,7 @@
             const companyName = document.getElementById('companyName').value.trim();
             const contactName = document.getElementById('contactName').value.trim();
             const contactRole = document.getElementById('contactRole').value.trim();
-            const contentDate = document.getElentById('contentDate').value;
+            const contentDate = document.getElementById('contentDate').value;
             const content = rawContent.value.trim();
 
             if (!companyName || !contactName || !content) {
@@ -231,7 +231,7 @@
                 hiddenForm.remove();
             };
 
-            // Timeout fallback â"n8n form triggers redirect, so iframe load fires on redirect
+            // Timeout fallback — n8n form triggers redirect, so iframe load fires on redirect
             setTimeout(() => {
                 if (submitBtn.disabled) {
                     showStatus('success', `Content submitted! ${companyName} - ${selectedType} is being processed. Check your Google Sheet in 1-2 minutes.`);

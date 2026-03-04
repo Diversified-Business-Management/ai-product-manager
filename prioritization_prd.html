@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stage 4: Prioritization & PRD - My Product Agent</title>
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --secondary-dark: #1e293b;
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-blue: #60a5fa;
+            --accent-purple: #a78bfa;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%));
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        .back-link::before {
+            content: '←';
+            font-size: 16px;
+        }
+
+        .title-section {
+            flex: 1;
+            text-align: center;
+        }
+
+        .title-section h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-indicator {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        /* Scoring Table */
+        .table-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-blue);
+            color: var(--primary-dark);
+            border-color: var(--accent-blue);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-light);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-left: auto;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: rgba(148, 163, 184, 0.05);
+        }
+
+        th {
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            transition: background 0.2s;
+        }
+
+        th:hover {
+            background: rgba(148, 163, 184, 0.1);
+        }
+
+        th::after {
+            content: ' ⇅';
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 12px;
+        }
+
+        th:hover::after {
+            opacity: 0.5;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+            color: var(--text-light);
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: rgba(96, 165, 250, 0.05);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-high {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success-green);
+        }
+
+        .badge-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning-amber);
+        }
+
+        .badge-low {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-red);
+        }
+
+        .score {
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        /* PRD Section */
+        .prd-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .form-full {
+            grid-column: 1 / -1;
+        }
+
+        .prd-preview {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .prd-preview h2 {
+            font-size: 18px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            color: var(--accent-blue);
+        }
+
+        .prd-preview h2:first-child {
+            margin-top: 0;
+        }
+
+        .prd-preview p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .prd-preview ul {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .prd-preview li {
+            margin-bottom: 8px;
+        }
+
+        /* Action Buttons */
+        .action-button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary-outline {
+            background: transparent;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            color: var(--text-light);
+        }
+
+        .btn-secondary-outline:hover {
+            background: rgba(148, 163, 184, 0.1);
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+            color: white;
+            margin-left: auto;
+        }
+
+        .btn-next:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .title-section {
+                order: 2;
+            }
+
+            .back-link {
+                order: 1;
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .action-buttons {
+                order: 3;
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .prd-form {
+                grid-template-columns: 1fr;
+            }
+
+            .action-button-group {
+                flex-direction: column;
+            }
+
+            .btn-next {
+                margin-left: 0;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+
+            .table-controls {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Scrollbar */
+        .prd-preview::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .prd-preview::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .prd-preview::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 3px;
+        }
+
+        .prd-preview::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <a href="index.html" class="back-link">Back to Index</a>
+            <div class="title-section">
+                <h1>Stage 4: Prioritization & PRD</h1>
+                <p class="step-indicator">Step 4 of 5</p>
+            </div>
+            <div style="width: 100px;"></div>
+        </div>
+
+        <!-- Capability Scoring Section -->
+        <div class="section">
+            <h2 class="section-title">Capability Scoring</h2>
+
+            <div class="table-controls">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterTable('ALL')">ALL</button>
+                    <button class="filter-btn" onclick="filterTable('HIGH')">HIGH</button>
+                    <button class="filter-btn" onclick="filterTable('MEDIUM')">MEDIUM</button>
+                    <button class="filter-btn" onclick="filterTable('LOW')">LOW</button>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="refreshScores()">Refresh Scores</button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="scoringTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">Rank</th>
+                            <th onclick="sortTable(1)">Capability</th>
+                            <th onclick="sortTable(2)">CI Score</th>
+                            <th onclick="sortTable(3)">BI Score</th>
+                            <th onclick="sortTable(4)">CTI Score</th>
+                            <th onclick="sortTable(5)">Total</th>
+                            <th onclick="sortTable(6)">Priority</th>
+                            <th onclick="sortTable(7)">Evidence</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr data-priority="HIGH">
+                            <td>1</td>
+                            <td>Merchandising V1: Associations & Rules</td>
+                            <td class="score">7.5</td>
+                            <td class="score">8.2</td>
+                            <td class="score">6.8</td>
+                            <td class="score">7.87</td>
+                            <td><span class="badge badge-high">HIGH</span></td>
+                            <td>14</td>
+                        </tr>
+                        <tr data-priority="HIGH">
+                            <td>2</td>
+                            <td>Catalog System: Management, Experience, Flexibility</td>
+                            <td class="score">7.3</td>
+                            <td class="score">8.1</td>
+                            <td class="score">7.0</td>
+                            <td class="score">7.80</td>
+                            <td><span class="badge badge-high">HIGH</span></td>
+                            <td>12</td>
+                        </tr>
+                        <tr data-priority="HIGH">
+                            <td>3</td>
+                            <td>Experience & Commerce Storefront</td>
+                            <td class="score">7.0</td>
+                            <td class="score">7.5</td>
+                            <td class="score">7.2</td>
+                            <td class="score">7.54</td>
+                            <td><span class="badge badge-high">HIGH</span></td>
+                            <td>11</td>
+                        </tr>
+                        <tr data-priority="HIGH">
+                            <td>4</td>
+                            <td>Dynamic Pricing 2</td>
+                            <td class="score">6.8</td>
+                            <td class="score">7.8</td>
+                            <td class="score">6.5</td>
+                            <td class="score">7.20</td>
+                            <td><span class="badge badge-high">HIGH</span></td>
+                            <td>9</td>
+                        </tr>
+                        <tr data-priority="MEDIUM">
+                            <td>5</td>
+                            <td>Bundles</td>
+                            <td class="score">6.5</td>
+                            <td class="score">7.0</td>
+                            <td class="score">5.8</td>
+                            <td class="score">6.63</td>
+                            <td><span class="badge badge-medium">MEDIUM</span></td>
+                            <td>8</td>
+                        </tr>
+                        <tr data-priority="MEDIUM">
+                            <td>6</td>
+                            <td>Promotions & Discounts Engine</td>
+                            <td class="score">6.2</td>
+                            <td class="score">6.8</td>
+                            <td class="score">5.9</td>
+                            <td class="score">6.30</td>
+                            <td><span class="badge badge-medium">MEDIUM</span></td>
+                            <td>7</td>
+                        </tr>
+                        <tr data-priority="MEDIUM">
+                            <td>7</td>
+                            <td>Inventory Management Integration</td>
+                            <td class="score">5.9</td>
+                            <td class="score">6.5</td>
+                            <td class="score">5.5</td>
+                            <td class="score">6.00</td>
+                            <td><span class="badge badge-medium">MEDIUM</span></td>
+                            <td>6</td>
+                        </tr>
+                        <tr data-priority="LOW">
+                            <td>8</td>
+                            <td>Personalization Engine</td>
+                            <td class="score">5.3</td>
+                            <td class="score">6.0</td>
+                            <td class="score">4.8</td>
+                            <td class="score">5.37</td>
+                            <td><span class="badge badge-low">LOW</span></td>
+                            <td>5</td>
+                        </tr>
+                        <tr data-priority="LOW">
+                            <td>9</td>
+                            <td>Advanced Analytics Dashboard</td>
+                            <td class="score">5.0</td>
+                            <td class="score">5.8</td>
+                            <td class="score">4.5</td>
+                            <td class="score">5.10</td>
+                            <td><span class="badge badge-low">LOW</span></td>
+                            <td>4</td>
+                        </tr>
+                        <tr data-priority="LOW">
+                            <td>10</td>
+                            <td>Mobile App Experience</td>
+                            <td class="score">4.8</td>
+                            <td class="score">5.5</td>
+                            <td class="score">4.2</td>
+                            <td class="score">4.83</td>
+                            <td><span class="badge badge-low">LOW</span></td>
+                            <td>3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PRD Generation Section -->
+        <div class="section">
+            <h2 class="section-title">Generate PRD</h2>
+
+            <div class="prd-form">
+                <div class="form-group">
+                    <label for="prdTitle">PRD Title</label>
+                    <input type="text" id="prdTitle" placeholder="Zuora Commerce - Product Requirements Document" value="Zuora Commerce - Product Requirements Document">
+                </div>
+                <div class="form-group">
+                    <label for="targetRelease">Target Release</label>
+                    <select id="targetRelease">
+                        <option value="Q1 2026">Q1 2026</option>
+                        <option value="Q2 2026" selected>Q2 2026</option>
+                        <option value="Q3 2026">Q3 2026</option>
+                        <option value="Q4 2026">Q4 2026</option>
+                    </select>
+                </div>
+                <div class="form-group form-full">
+                    <label for="successMetrics">Success Metrics</label>
+                    <textarea id="successMetrics" placeholder="Define measurable success criteria...">Increase average order value by 15%. Reduce cart abandonment rate by 8%. Improve customer satisfaction score to 4.5+/5. Achieve 99.5% platform uptime.</textarea>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="generatePRD()">Generate PRD</button>
+            </div>
+
+            <div class="prd-preview" id="prdPreview">
+                <h2>Zuora Commerce - Product Requirements Document</h2>
+
+                <h2>Overview</h2>
+                <p>This PRD outlines the key capabilities and requirements for advancing the Zuora Commerce platform to better serve our customer base and capture market opportunities in the dynamic commerce space.</p>
+
+                <h2>Key Requirements</h2>
+                <ul>
+                    <li><strong>Merchandising V1:</strong> Support flexible product associations and rule-based bundling</li>
+                    <li><strong>Catalog System:</strong> Centralized management with rich experiences and maximum flexibility</li>
+                    <li><strong>Storefront Experience:</strong> Modern, responsive commerce experience across devices</li>
+                    <li><strong>Dynamic Pricing:</strong> Real-time price optimization based on demand and market conditions</li>
+                    <li><strong>Promotions:</strong> Powerful discounting and promotional campaign management</li>
+                </ul>
+
+                <h2>Customer Evidence</h2>
+                <p>Validated through 45+ customer interviews, 120+ data points, and comprehensive market research. Key themes include need for advanced catalog flexibility, improved storefront experiences, and dynamic pricing capabilities.</p>
+
+                <h2>Success Criteria</h2>
+                <ul>
+                    <li>Platform adoption by 60% of customer base within 6 months</li>
+                    <li>15% improvement in average order value for adopting customers</li>
+                    <li>Support for 1000+ SKU catalogs with sub-second performance</li>
+                    <li>99.5% system uptime and reliability</li>
+                </ul>
+
+                <h2>Target Release</h2>
+                <p>Q2 2026</p>
+            </div>
+
+            <div class="action-button-group">
+                <button class="btn btn-secondary-outline" onclick="openInGoogleDocs()">Open in Google Docs</button>
+                <button class="btn btn-secondary-outline" onclick="downloadPDF()">Download PDF</button>
+                <a href="handoff.html" class="btn btn-next">Proceed to Stage 5 →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFilter = 'ALL';
+        let sortDirection = {};
+
+        function filterTable(priority) {
+            currentFilter = priority;
+            const rows = document.querySelectorAll('#tableBody tr');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            rows.forEach(row => {
+                if (priority === 'ALL' || row.dataset.priority === priority) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById('scoringTable');
+            const tbody = document.getElementById('tableBody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Determine sort direction
+            const key = `col-${columnIndex}`;
+            sortDirection[key] = sortDirection[key] === 'asc' ? 'desc' : 'asc';
+
+            rows.sort((a, b) => {
+                let aVal = a.cells[columnIndex].textContent.trim();
+                let bVal = b.cells[columnIndex].textContent.trim();
+
+                // Try to parse as number
+                const aNum = parseFloat(aVal);
+                const bNum = parseFloat(bVal);
+
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    return sortDirection[key] === 'asc' ? aNum - bNum : bNum - aNum;
+                }
+
+                return sortDirection[key] === 'asc'
+                    ? aVal.localeCompare(bVal)
+                    : bVal.localeCompare(aVal);
+            });
+
+            // Reapply filter after sorting
+            const currentPriority = currentFilter;
+            rows.forEach(row => {
+                tbody.appendChild(row);
+                if (currentPriority !== 'ALL' && row.dataset.priority !== currentPriority) {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function refreshScores() {
+            alert('Refreshing scores from latest data...');
+            // Simulate refresh
+            setTimeout(() => {
+                alert('Scores updated successfully!');
+            }, 1000);
+        }
+
+        function generatePRD() {
+            const prdTitle = document.getElementById('prdTitle').value;
+            const targetRelease = document.getElementById('targetRelease').value;
+            const successMetrics = document.getElementById('successMetrics').value;
+
+            if (!prdTitle || !targetRelease || !successMetrics) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Prepare payload
+            const payload = {
+                title: prdTitle,
+                targetRelease: targetRelease,
+                successMetrics: successMetrics,
+                timestamp: new Date().toISOString()
+            };
+
+            // POST to webhook
+            fetch('https://edenger.app.n8n.cloud/webhook/mpa-generate-prd', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('PRD generated successfully!');
+                    console.log('PRD submitted');
+                } else {
+                    alert('Error generating PRD');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error generating PRD: ' + error.message);
+            });
+        }
+
+        function openInGoogleDocs() {
+            alert('Opening PRD in Google Docs...');
+            window.open('https://docs.google.com/document/d/new', '_blank');
+        }
+
+        function downloadPDF() {
+            alert('Downloading PRD as PDF...');
+            // Simulate PDF download
+            const element = document.getElementById('prdPreview');
+            const opt = {
+                margin: 10,
+                filename: 'PRD_' + new Date().toISOString().split('T')[0] + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            console.log('PDF download initiated');
+        }
+    </script>
+</body>
+</html>

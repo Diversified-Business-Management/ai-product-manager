@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stage 2: Preliminary Assessment - My Product Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0f172a;
+            --bg-light: #1e293b;
+            --text-primary: #e2e8f0;
+            --text-secondary: #cbd5e1;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+            --border-color: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--accent-purple);
+        }
+
+        .title-section {
+            flex: 1;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stage-indicator {
+            font-size: 12px;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Input Section */
+        .input-section {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .input-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+        }
+
+        .project-selector,
+        .idea-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .project-selector:focus,
+        .idea-textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .idea-textarea {
+            resize: vertical;
+            min-height: 180px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+        }
+
+        .run-assessment-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .run-assessment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+
+        .run-assessment-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Loading State */
+        .loading-section {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .loading-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .loading-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+
+        .analysis-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .analysis-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .analysis-card.complete {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .analysis-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(59, 130, 246, 0.2);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .checkmark {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--success);
+            font-size: 24px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 24px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        /* Feasibility Banner */
+        .feasibility-banner {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .feasibility-banner {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        .gauge-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .circular-gauge {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-size: 48px;
+            font-weight: 700;
+            background: conic-gradient(var(--accent-green) 0deg, var(--accent-green) 259.2deg, var(--border-color) 259.2deg);
+            box-shadow: inset 0 0 0 12px var(--bg-light);
+        }
+
+        .circular-gauge.low {
+            background: conic-gradient(var(--danger) 0deg, var(--danger) 144deg, var(--border-color) 144deg);
+        }
+
+        .circular-gauge.medium {
+            background: conic-gradient(var(--warning) 0deg, var(--warning) 216deg, var(--border-color) 216deg);
+        }
+
+        .circular-gauge.high {
+            background: conic-gradient(var(--success) 0deg, var(--success) 259.2deg, var(--border-color) 259.2deg);
+        }
+
+        .gauge-score {
+            position: absolute;
+        }
+
+        .feasibility-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .go-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .go-badge.proceed {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .go-badge.reconsider {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .go-badge.no-proceed {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .score-item {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .score-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Tab Navigation */
+        .tabs-container {
+            margin-bottom: 40px;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+        }
+
+        .tab-button {
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            color: var(--accent-blue);
+        }
+
+        .tab-button.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        .tab-panel {
+            display: none;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .tab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .confidence-badge {
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .confidence-badge.high {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .confidence-badge.medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .confidence-badge.low {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-secondary);
+        }
+
+        /* Web Search Tab */
+        .insights-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .insights-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .insights-list li:last-child {
+            border-bottom: none;
+        }
+
+        .insights-list li::before {
+            content: "▸ ";
+            color: var(--accent-blue);
+            margin-right: 8px;
+        }
+
+        .section-header {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Competitors Tab */
+        .competitors-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .competitors-table th {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .competitors-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .competitors-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .feature-badge.yes {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .feature-badge.no {
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--text-secondary);
+        }
+
+        .gap-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .gap-badge.high {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .gap-badge.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .gap-badge.low {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        /* Adjacent Solutions Tab */
+        .adjacent-list {
+            list-style: none;
+        }
+
+        .adjacent-item {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .adjacent-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .adjacent-industry {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .adjacent-solution {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .adjacent-transferable {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Customer Evidence Tab */
+        .customer-quote {
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 3px solid var(--accent-blue);
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .customer-quote:last-child {
+            margin-bottom: 0;
+        }
+
+        .quote-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .quote-meta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .quote-company {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-badge.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .severity-badge.high {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .severity-badge.medium {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .segment-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-purple);
+            text-transform: uppercase;
+        }
+
+        /* TAM Tab */
+        .tam-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+        }
+
+        .metric-note {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .markets-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .markets-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .markets-list li:last-child {
+            border-bottom: none;
+        }
+
+        .markets-list li::before {
+            content: "▸ ";
+            color: var(--accent-purple);
+            margin-right: 8px;
+        }
+
+        /* Key Questions Section */
+        .key-questions-section {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .key-questions-section.active {
+            display: block;
+        }
+
+        .key-questions-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .questions-list {
+            list-style: none;
+        }
+
+        .question-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            align-items: flex-start;
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+        }
+
+        .question-checkbox {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--accent-blue);
+        }
+
+        .question-text {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Actions Bar */
+        .actions-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.2fr;
+            gap: 16px;
+            padding: 24px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .actions-bar.active {
+            display: grid;
+        }
+
+        @media (max-width: 768px) {
+            .actions-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .action-button {
+            padding: 12px 20px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        .action-button:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .proceed-button {
+            padding: 12px 20px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .proceed-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .feasibility-banner {
+                padding: 24px;
+            }
+
+            .input-section {
+                padding: 24px;
+            }
+
+            .tab-nav {
+                gap: 4px;
+            }
+
+            .tab-button {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .analysis-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .score-breakdown {
+                grid-template-columns: 1fr;
+            }
+
+            .tam-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.error {
+            background: rgba(239, 68, 68, 0.9);
+        }
+
+        .toast.warning {
+            background: rgba(245, 158, 11, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <a href="index.html" class="back-link">← Back to Portal</a>
+            <div class="title-section">
+                <h1 class="page-title">Stage 2: Preliminary Assessment</h1>
+                <p class="stage-indicator">Step 2 of 5</p>
+            </div>
+            <div style="width: 120px;"></div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section active" id="inputSection">
+            <div class="form-group">
+                <label class="form-label">Project</label>
+                <select class="project-selector" id="projectSelector">
+                    <option value="merchandising-v1">Merchandising V1</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Idea Description</label>
+                <textarea class="idea-textarea" id="ideaTextarea" placeholder="Describe your product idea, feature, or solution here. Include the problem, proposed solution, and expected impact."></textarea>
+            </div>
+
+            <button class="run-assessment-btn" id="runAssessmentBtn">Run Assessment</button>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="loading-section" id="loadingSection">
+            <h2 class="loading-header">Running 5 Parallel Analyses...</h2>
+            <div class="analysis-cards" id="analysisCards">
+                <!-- Generated by JavaScript -->
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <!-- Feasibility Banner -->
+            <div class="feasibility-banner" id="feasibilityBanner">
+                <div class="gauge-container">
+                    <div class="circular-gauge" id="circularGauge">
+                        <span class="gauge-score" id="gaugeScore">7.2</span>
+                    </div>
+                </div>
+                <div class="feasibility-content">
+                    <div class="go-badge proceed" id="goBadge">
+                        <span>✓</span> Proceed
+                    </div>
+                    <div>
+                        <div class="section-header">Feasibility Score Breakdown</div>
+                        <div class="score-breakdown">
+                            <div class="score-item">
+                                <div class="score-label">Competitive Impact</div>
+                                <div class="score-value" id="ciScore">6.8</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">Business Impact</div>
+                                <div class="score-value" id="biScore">7.8</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">Customer TAM Impact</div>
+                                <div class="score-value" id="ctiScore">6.5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="tabs-container">
+                <div class="tab-nav" id="tabNav">
+                    <button class="tab-button active" data-tab="web-search">Web Search</button>
+                    <button class="tab-button" data-tab="competitors">Competitors</button>
+                    <button class="tab-button" data-tab="adjacent">Adjacent Solutions</button>
+                    <button class="tab-button" data-tab="customer">Customer Evidence</button>
+                    <button class="tab-button" data-tab="tam">TAM Snapshot</button>
+                </div>
+
+                <!-- Web Search Tab -->
+                <div class="tab-panel active" id="web-search-panel">
+                    <div class="tab-header">
+                        <div class="tab-title">Web Search Analysis</div>
+                        <div class="confidence-badge high">High Confidence</div>
+                    </div>
+                    <div id="webSearchContent">
+                        <!-- Generated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Competitors Tab -->
+                <div class="tab-panel" id="competitors-panel">
+                    <div class="tab-header">
+                        <div class="tab-title">Competitive Evaluation</div>
+                        <div class="confidence-badge high">High Confidence</div>
+                    </div>
+                    <table class="competitors-table" id="competitorsTable">
+                        <!-- Generated by JavaScript -->
+                    </table>
+                </div>
+
+                <!-- Adjacent Solutions Tab -->
+                <div class="tab-panel" id="adjacent-panel">
+                    <div class="tab-header">
+                        <div class="tab-title">Adjacent Solutions</div>
+                        <div class="confidence-badge medium">Medium Confidence</div>
+                    </div>
+                    <ul class="adjacent-list" id="adjacentList">
+                        <!-- Generated by JavaScript -->
+                    </ul>
+                </div>
+
+                <!-- Customer Evidence Tab -->
+                <div class="tab-panel" id="customer-panel">
+                    <div class="tab-header">
+                        <div class="tab-title">Customer Evidence</div>
+                        <div class="confidence-badge high">High Confidence</div>
+                    </div>
+                    <div id="customerEvidenceContent">
+                        <!-- Generated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- TAM Tab -->
+                <div class="tab-panel" id="tam-panel">
+                    <div class="tab-header">
+                        <div class="tab-title">TAM Snapshot</div>
+                        <div class="confidence-badge medium">Medium Confidence</div>
+                    </div>
+                    <div id="tamContent">
+                        <!-- Generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Questions Section -->
+            <div class="key-questions-section active" id="keyQuestionsSection">
+                <h3 class="key-questions-title">Key Questions to Validate</h3>
+                <ul class="questions-list" id="questionsList">
+                    <!-- Generated by JavaScript -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Actions Bar -->
+        <div class="actions-bar" id="actionsBar">
+            <button class="action-button" id="saveToDriveBtn">💾 Save to Drive</button>
+            <button class="action-button" id="shareAssessmentBtn">🔗 Share Assessment</button>
+            <a href="#" class="proceed-button" id="proceedBtn">Proceed to Stage 3 →</a>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const DEMO_MODE = true; // Set to false when webhook is ready
+        const WEBHOOK_URL = 'https://edenger.app.n8n.cloud/webhook/mpa-analyze-idea';
+
+        // Get URL parameters
+        function getUrlParam(param) {
+            const searchParams = new URLSearchParams(window.location.search);
+            return searchParams.get(param);
+        }
+
+        // Demo data
+        const DEMO_DATA = {
+            feasibility_score: 7.2,
+            ci_score: 6.8,
+            bi_score: 7.8,
+            cti_score: 6.5,
+            web_search: {
+                key_insights: [
+                    'Dynamic pricing adoption in B2B SaaS has grown 34% YoY, with enterprise focus on revenue optimization',
+                    'Gartner projects $2.1B+ TAM for pricing intelligence platforms by 2027',
+                    'Customer willingness to pay models show 23% uptake in mid-market segment',
+                    'Real-time pricing adjustment correlates with 15-28% ARR improvement in early adopters',
+                    'Privacy and data residency concerns are top implementation barriers',
+                    'API-first architectures enable faster time-to-value for pricing solutions'
+                ],
+                opportunities: [
+                    'Untapped SMB market (<$10M ARR) seeking affordable solutions',
+                    'Integration with existing billing platforms (Stripe, Zuora) as expansion path',
+                    'Industry-specific pricing templates for vertical SaaS'
+                ],
+                risks: [
+                    'Customer hesitancy to share transaction data for pricing analysis',
+                    'Regulatory scrutiny on algorithmic pricing fairness',
+                    'Incumbent solutions expanding into this space aggressively'
+                ]
+            },
+            competitors: [
+                { name: 'Salesforce', feature_available: true, zuora_status: 'Beta', gap_level: 'low' },
+                { name: 'BillingPlatform', feature_available: false, zuora_status: 'Planned Q3', gap_level: 'high' },
+                { name: 'Metronome', feature_available: true, zuora_status: 'Live', gap_level: 'low' },
+                { name: 'Orb', feature_available: true, zuora_status: 'Live', gap_level: 'medium' },
+                { name: 'Stripe', feature_available: false, zuora_status: 'No Plans', gap_level: 'high' }
+            ],
+            adjacent_solutions: [
+                {
+                    industry: 'E-commerce',
+                    solution: 'Dynamic pricing engine (Amazon, eBay)',
+                    transferable: 'Real-time inventory-based repricing, A/B testing frameworks'
+                },
+                {
+                    industry: 'Airlines',
+                    solution: 'Revenue management systems',
+                    transferable: 'Demand forecasting, customer segment targeting, price elasticity modeling'
+                },
+                {
+                    industry: 'Hospitality',
+                    solution: 'Yield management platforms',
+                    transferable: 'Historical trend analysis, seasonal adjustment, competitive pricing monitoring'
+                },
+                {
+                    industry: 'Retail',
+                    solution: 'Markdown optimization',
+                    transferable: 'Margin protection algorithms, promotional timing, inventory-based pricing'
+                }
+            ],
+            customer_evidence: [
+                {
+                    quote: 'Manual pricing reviews consume 40+ hours/month across our sales and finance teams. A solution that automates this would transform our operations.',
+                    company: 'Caterpillar',
+                    severity: 'critical',
+                    segment: 'Enterprise'
+                },
+                {
+                    quote: 'We lose 8-12% of potential revenue by not adjusting pricing in real-time based on market conditions.',
+                    company: 'Honeywell',
+                    severity: 'critical',
+                    segment: 'Enterprise'
+                },
+                {
+                    quote: 'Competitive pricing visibility is our blind spot. We need data-driven insights to inform pricing strategy.',
+                    company: 'Flex',
+                    severity: 'high',
+                    segment: 'Mid-Market'
+                },
+                {
+                    quote: 'Our pricing complexity (40+ tiers) creates customer confusion and support overhead.',
+                    company: 'Atlassian',
+                    severity: 'high',
+                    segment: 'Enterprise'
+                }
+            ],
+            tam_snapshot: {
+                tam: '$12.4B',
+                sam: '$3.2B',
+                som: '$240M',
+                key_markets: [
+                    'Enterprise SaaS (60% of TAM)',
+                    'Subscription Commerce (25% of TAM)',
+                    'Professional Services (10% of TAM)',
+                    'Marketplace Platforms (5% of TAM)'
+                ],
+                growth_rate: '26% CAGR'
+            },
+            key_questions: [
+                'How quickly can we acquire access to transaction/customer data from target accounts?',
+                'What is the optimal pricing model (per-user, per-transaction, or value-based)?',
+                'Which integration points (billing, CRM, analytics) matter most for customer adoption?',
+                'How do we build trust with customers on data privacy and fairness transparency?',
+                'What is the minimum TAM threshold to make this venture viable vs. existing solutions?',
+                'Can we achieve <3 month implementation timeline given typical enterprise complexity?',
+                'How defensible is our differentiation vs. Salesforce and Stripe expanding capabilities?'
+            ]
+        };
+
+        // Analyses to track
+        const ANALYSES = [
+            'General Web Search',
+            'Competitor Evaluation',
+            'Adjacent Solutions',
+            'Customer Evidence',
+            'TAM Snapshot'
+        ];
+
+        // State
+        let currentState = 'input'; // input, loading, results
+        let analysisProgress = 0;
+        let projectId = getUrlParam('project_id') || 'merchandising-v1';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const ideaParam = getUrlParam('idea');
+            if (ideaParam) {
+                document.getElementById('ideaTextarea').value = decodeURIComponent(ideaParam);
+            }
+
+            document.getElementById('runAssessmentBtn').addEventListener('click', handleRunAssessment);
+            document.getElementById('projectSelector').addEventListener('change', (e) => {
+                projectId = e.target.value;
+            });
+
+            // Tab navigation
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tabName = e.target.dataset.tab;
+                    switchTab(tabName);
+                });
+            });
+
+            // Action buttons
+            document.getElementById('saveToDriveBtn').addEventListener('click', handleSaveToDrive);
+            document.getElementById('shareAssessmentBtn').addEventListener('click', handleShareAssessment);
+            document.getElementById('proceedBtn').addEventListener('click', (e) => {
+                e.target.href = `research_hub.html?project_id=${projectId}`;
+            });
+        });
+
+        function handleRunAssessment() {
+            const idea = document.getElementById('ideaTextarea').value.trim();
+            if (!idea) {
+                showToast('Please enter an idea description', 'warning');
+                return;
+            }
+
+            setState('loading');
+            runAnalysis(idea);
+        }
+
+        function setState(newState) {
+            currentState = newState;
+            document.getElementById('inputSection').classList.remove('active');
+            document.getElementById('loadingSection').classList.remove('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('actionsBar').classList.remove('active');
+
+            switch (newState) {
+                case 'input':
+                    document.getElementById('inputSection').classList.add('active');
+                    break;
+                case 'loading':
+                    document.getElementById('loadingSection').classList.add('active');
+                    renderAnalysisCards();
+                    break;
+                case 'results':
+                    document.getElementById('resultsSection').classList.add('active');
+                    document.getElementById('actionsBar').classList.add('active');
+                    break;
+            }
+        }
+
+        function renderAnalysisCards() {
+            const container = document.getElementById('analysisCards');
+            container.innerHTML = '';
+            ANALYSES.forEach(analysis => {
+                const card = document.createElement('div');
+                card.className = 'analysis-card';
+                card.dataset.analysis = analysis;
+                card.innerHTML = `
+                    <div class="analysis-name">${analysis}</div>
+                    <div class="status-indicator">
+                        <div class="spinner"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function runAnalysis(idea) {
+            if (DEMO_MODE) {
+                // Simulate sequential completion
+                await simulateAnalysis();
+            } else {
+                // Call webhook
+                try {
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            project_id: projectId,
+                            idea_description: idea
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('API Error');
+                    const data = await response.json();
+                    displayResults(data);
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('Analysis failed. Using demo data.', 'error');
+                    await simulateAnalysis();
+                }
+            }
+        }
+
+        async function simulateAnalysis() {
+            for (let i = 0; i < ANALYSES.length; i++) {
+                await new Promise(resolve => setTimeout(resolve, 800));
+                completeAnalysis(i);
+            }
+            displayResults(DEMO_DATA);
+        }
+
+        function completeAnalysis(index) {
+            const card = document.querySelectorAll('.analysis-card')[index];
+            card.classList.add('complete');
+            const indicator = card.querySelector('.status-indicator');
+            indicator.innerHTML = '<div class="checkmark">✓</div>';
+            updateProgressBar((index + 1) / ANALYSES.length);
+        }
+
+        function updateProgressBar(progress) {
+            analysisProgress = progress;
+            document.getElementById('progressBar').style.width = (progress * 100) + '%';
+        }
+
+        function displayResults(data) {
+            // Feasibility banner
+            document.getElementById('gaugeScore').textContent = data.feasibility_score;
+            document.getElementById('ciScore').textContent = data.ci_score;
+            document.getElementById('biScore').textContent = data.bi_score;
+            document.getElementById('ctiScore').textContent = data.cti_score;
+
+            const gauge = document.getElementById('circularGauge');
+            gauge.classList.remove('low', 'medium', 'high');
+            if (data.feasibility_score >= 7) {
+                gauge.classList.add('high');
+                document.getElementById('goBadge').className = 'go-badge proceed';
+                document.getElementById('goBadge').innerHTML = '<span>✓</span> Proceed';
+            } else if (data.feasibility_score >= 5) {
+                gauge.classList.add('medium');
+                document.getElementById('goBadge').className = 'go-badge reconsider';
+                document.getElementById('goBadge').innerHTML = '<span>!</span> Reconsider';
+            } else {
+                gauge.classList.add('low');
+                document.getElementById('goBadge').className = 'go-badge no-proceed';
+                document.getElementById('goBadge').innerHTML = '<span>✗</span> Do Not Proceed';
+            }
+
+            // Web Search
+            const webSearchContent = document.getElementById('webSearchContent');
+            webSearchContent.innerHTML = `
+                <ul class="insights-list">
+                    ${data.web_search.key_insights.map(insight => `<li>${insight}</li>`).join('')}
+                </ul>
+                <div class="section-header">Opportunities</div>
+                <ul class="insights-list">
+                    ${data.web_search.opportunities.map(opp => `<li>${opp}</li>`).join('')}
+                </ul>
+                <div class="section-header">Risks</div>
+                <ul class="insights-list">
+                    ${data.web_search.risks.map(risk => `<li>${risk}</li>`).join('')}
+                </ul>
+            `;
+
+            // Competitors
+            const competitorTable = document.getElementById('competitorsTable');
+            competitorTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Competitor</th>
+                        <th>Feature Available</th>
+                        <th>Zuora Status</th>
+                        <th>Gap Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.competitors.map(comp => `
+                        <tr>
+                            <td>${comp.name}</td>
+                            <td><span class="feature-badge ${comp.feature_available ? 'yes' : 'no'}">${comp.feature_available ? 'Yes' : 'No'}</span></td>
+                            <td>${comp.zuora_status}</td>
+                            <td><span class="gap-badge ${comp.gap_level}">${comp.gap_level.charAt(0).toUpperCase() + comp.gap_level.slice(1)}</span></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+
+            // Adjacent Solutions
+            const adjacentList = document.getElementById('adjacentList');
+            adjacentList.innerHTML = data.adjacent_solutions.map(sol => `
+                <li class="adjacent-item">
+                    <div class="adjacent-industry">${sol.industry}</div>
+                    <div class="adjacent-solution">${sol.solution}</div>
+                    <div class="adjacent-transferable"><strong>Transferable:</strong> ${sol.transferable}</div>
+                </li>
+            `).join('');
+
+            // Customer Evidence
+            const customerContent = document.getElementById('customerEvidenceContent');
+            customerContent.innerHTML = data.customer_evidence.map(cust => `
+                <div class="customer-quote">
+                    <div class="quote-text">"${cust.quote}"</div>
+                    <div class="quote-meta">
+                        <span class="quote-company">— ${cust.company}</span>
+                        <span class="severity-badge ${cust.severity}">${cust.severity.charAt(0).toUpperCase() + cust.severity.slice(1)}</span>
+                        <span class="segment-tag">${cust.segment}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // TAM
+            const tamContent = document.getElementById('tamContent');
+            tamContent.innerHTML = `
+                <div class="tam-metrics">
+                    <div class="metric-box">
+                        <div class="metric-label">Total Addressable Market</div>
+                        <div class="metric-value">${data.tam_snapshot.tam}</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Serviceable Available Market</div>
+                        <div class="metric-value">${data.tam_snapshot.sam}</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Serviceable Obtainable Market</div>
+                        <div class="metric-value">${data.tam_snapshot.som}</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Growth Rate</div>
+                        <div class="metric-value">${data.tam_snapshot.growth_rate}</div>
+                    </div>
+                </div>
+                <div class="section-header">Key Markets</div>
+                <ul class="markets-list">
+                    ${data.tam_snapshot.key_markets.map(market => `<li>${market}</li>`).join('')}
+                </ul>
+            `;
+
+            // Key Questions
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = data.key_questions.map(question => `
+                <li class="question-item">
+                    <input type="checkbox" class="question-checkbox">
+                    <span class="question-text">${question}</span>
+                </li>
+            `).join('');
+
+            setState('results');
+        }
+
+        function switchTab(tabName) {
+            // Update buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(tabName + '-panel').classList.add('active');
+        }
+
+        function handleSaveToDrive() {
+            showToast('Saving to Google Drive... (feature coming soon)', 'warning');
+        }
+
+        function handleShareAssessment() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Assessment link copied to clipboard!', 'success');
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(400px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

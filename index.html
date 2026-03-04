@@ -3,91 +3,678 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Product Manager - Zuora Commerce</title>
+    <title>My Product Agent - Product Validation Platform</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; color: #e2e8f0; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 60px 24px; }
-        .header { text-align: center; margin-bottom: 48px; }
-        .header h1 { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-        .header p { font-size: 1.1rem; color: #94a3b8; }
-        .badge { display: inline-block; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #818cf8; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; margin-top: 12px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px; }
-        .card { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 16px; padding: 32px; transition: all 0.3s ease; text-decoration: none; color: inherit; display: block; }
-        .card:hover { border-color: rgba(99, 102, 241, 0.4); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px; }
-        .card h2 { font-size: 1.25rem; font-weight: 600; color: #f1f5f9; margin-bottom: 8px; }
-        .card p { font-size: 0.9rem; color: #94a3b8; line-height: 1.6; }
-        .card-tag { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 6px; margin-top: 12px; }
-        .bg-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-        .bg-purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
-        .bg-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
-        .bg-orange { background: rgba(249, 115, 22, 0.15); color: #fb923c; }
-        .bg-teal { background: rgba(20, 184, 166, 0.15); color: #2dd4bf; }
-        .bg-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-        .bg-rose { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
-        .footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(148, 163, 184, 0.1); color: #64748b; font-size: 0.85rem; }
-        .footer a { color: #818cf8; text-decoration: none; }
-        .status { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #4ade80; margin-top: 16px; }
-        .status-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0f172a;
+            --secondary-dark: #1e293b;
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-blue: #60a5fa;
+            --accent-purple: #a78bfa;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-rose: #f43f5e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.8));
+            backdrop-filter: blur(10px);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(96, 165, 250, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .header-badges {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .status-dot {
+            display: inline-flex;
+            width: 8px;
+            height: 8px;
+            background: var(--success-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                opacity: 0.7;
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.3);
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Pipeline Section */
+        .pipeline-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+
+        .pipeline {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .pipeline-connector {
+            position: absolute;
+            top: 2.5rem;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+                rgba(96, 165, 250, 0.2) 0%,
+                rgba(96, 165, 250, 0.4) 50%,
+                rgba(96, 165, 250, 0.2) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .stage-card {
+            flex: 1;
+            min-width: 160px;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stage-card:hover {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.9));
+            border-color: rgba(96, 165, 250, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(96, 165, 250, 0.1);
+        }
+
+        .stage-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 auto;
+        }
+
+        .stage-icon {
+            font-size: 2rem;
+        }
+
+        .stage-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .stage-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Projects Section */
+        .projects-section {
+            margin-bottom: 4rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.9));
+            border-color: rgba(96, 165, 250, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(96, 165, 250, 0.1);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .project-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .project-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--success-green);
+        }
+
+        .project-status.inactive {
+            background: rgba(148, 163, 184, 0.1);
+            border-color: rgba(148, 163, 184, 0.3);
+            color: var(--text-muted);
+        }
+
+        .project-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-stage {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .project-score {
+            text-align: right;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .project-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(96, 165, 250, 0.1);
+            padding-top: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Tools Section */
+        .tools-section {
+            margin-bottom: 4rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.6));
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tool-card:hover {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.9));
+            border-color: rgba(96, 165, 250, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(96, 165, 250, 0.1);
+        }
+
+        .tool-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .tool-card.disabled:hover {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.6));
+            border-color: rgba(96, 165, 250, 0.2);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--text-light);
+        }
+
+        .tool-tag {
+            display: inline-flex;
+            padding: 0.25rem 0.75rem;
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tool-tag.analytics {
+            background: rgba(96, 165, 250, 0.1);
+            border-color: rgba(96, 165, 250, 0.3);
+            color: var(--accent-blue);
+        }
+
+        .tool-tag.research {
+            background: rgba(167, 139, 250, 0.1);
+            border-color: rgba(167, 139, 250, 0.3);
+            color: var(--accent-purple);
+        }
+
+        .tool-tag.agent {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
+            color: var(--warning-amber);
+        }
+
+        .tool-tag.query {
+            background: rgba(251, 146, 60, 0.1);
+            border-color: rgba(251, 146, 60, 0.3);
+            color: #fb923c;
+        }
+
+        .tool-tag.ingest {
+            background: rgba(20, 184, 166, 0.1);
+            border-color: rgba(20, 184, 166, 0.3);
+            color: #14b8a6;
+        }
+
+        .tool-tag.coming-soon {
+            background: rgba(244, 63, 94, 0.1);
+            border-color: rgba(244, 63, 94, 0.3);
+            color: var(--danger-rose);
+        }
+
+        .tool-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.8));
+            border-top: 1px solid rgba(96, 165, 250, 0.1);
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-purple);
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+
+            .pipeline {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .pipeline-connector {
+                display: none;
+            }
+
+            .stage-card {
+                min-width: unset;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-badges {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 2rem 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .pipeline-section,
+            .projects-section,
+            .tools-section {
+                margin-bottom: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="header-content">
+            <h1 class="header-title">My Product Agent</h1>
+            <p class="header-subtitle">End-to-End Product Validation Platform for Zuora Commerce</p>
+            <div class="header-badges">
+                <div class="badge">Validate • Research • Prioritize • Ship</div>
+                <div class="badge">
+                    <span class="status-dot"></span>
+                    9 Workflows Active
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
     <div class="container">
-        <div class="header">
-            <h1>AI Product Manager</h1>
-            <p>Multi-Project Intelligence Platform for Zuora Commerce</p>
-            <div class="badge">Merchandising &bull; Powered by n8n + Google Workspace</div>
-            <div class="status"><span class="status-dot"></span> 8 Workflows Active</div>
-        </div>
-        <div class="grid">
-            <a href="master_dashboard.html" class="card">
-                <div class="card-icon bg-blue">&#128202;</div>
-                <h2>Master Dashboard</h2>
-                <p>Portfolio overview with project KPIs, capability maturity rankings, trend analysis, and executive summary across all managed products.</p>
-                <span class="card-tag bg-blue">Analytics</span>
-            </a>
-            <a href="interview_tracker.html" class="card">
-                <div class="card-icon bg-purple">&#128483;</div>
-                <h2>Interview Tracker</h2>
-                <p>Manage stakeholder interview pipeline, track insights, cluster themes, and surface actionable findings from customer and internal conversations.</p>
-                <span class="card-tag bg-purple">Research</span>
-            </a>
-            <a href="project_wizard.html" class="card">
-                <div class="card-icon bg-green">&#9889;</div>
-                <h2>Project Wizard</h2>
-                <p>Guided new project creation flow. Scaffolds Google Sheets, configures survey forms, and sets up monitoring for new product initiatives.</p>
-                <span class="card-tag bg-green">Setup</span>
-            </a>
-            <a href="rag_notebook_template.html" class="card">
-                <div class="card-icon bg-orange">&#128218;</div>
-                <h2>RAG Notebook</h2>
-                <p>Query interface for project intelligence data. Ask natural language questions about surveys, scores, competitors, and interview insights.</p>
-                <span class="card-tag bg-orange">AI Query</span>
-            </a>
-            <a href="upload_content.html" class="card">
-                <div class="card-icon bg-teal">&#128640;</div>
-                <h2>Upload Raw Content</h2>
-                <p>Feed customer discussions, interview transcripts, meeting notes, and emails into the AI analysis engine. Content is automatically scored and added to your knowledge base.</p>
-                <span class="card-tag bg-teal">Ingest</span>
-            </a>
-            <a href="commerce_expert.html" class="card">
-                <div class="card-icon bg-amber">&#129302;</div>
-                <h2>Ask the Commerce Expert</h2>
-                <p>Chat with an AI agent trained on Zuora Commerce documentation. Get precise answers about catalog architecture, pricing models, APIs, CPQ flows, and platform capabilities.</p>
-                <span class="card-tag bg-amber">RAG Agent</span>
-            </a>
-            <a href="#" class="card" style="opacity: 0.5; pointer-events: none;">
-                <div class="card-icon bg-rose">&#127758;</div>
-                <h2>Competitive Intel Monitor</h2>
-                <p>Automated monitoring and screen scraping of competitor sites, industry news, and market intelligence. Feeds insights into the scoring engine on a schedule.</p>
-                <span class="card-tag bg-rose">Coming Soon</span>
-            </a>
-        </div>
-        <div class="footer">
-            <p>n8n Instance: <a href="https://edenger.app.n8n.cloud" target="_blank">edenger.app.n8n.cloud</a> &bull;
-            Google Sheet: <a href="https://docs.google.com/spreadsheets/d/1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w/edit" target="_blank">AI PM Master</a></p>
+        <!-- Pipeline Section -->
+        <section class="pipeline-section">
+            <h2 class="section-title">5-Stage Pipeline</h2>
+            <div class="pipeline">
+                <div class="pipeline-connector"></div>
+
+                <a href="create_project.html" class="stage-card">
+                    <div class="stage-number">1</div>
+                    <div class="stage-icon">📁</div>
+                    <div class="stage-title">Create Project</div>
+                    <div class="stage-description">Set up project structure, Drive folders, and initial configuration</div>
+                </a>
+
+                <a href="describe_idea.html" class="stage-card">
+                    <div class="stage-number">2</div>
+                    <div class="stage-icon">💡</div>
+                    <div class="stage-title">Describe Idea</div>
+                    <div class="stage-description">Submit your idea for AI-powered preliminary assessment with 5 parallel analyses</div>
+                </a>
+
+                <a href="research_hub.html" class="stage-card">
+                    <div class="stage-number">3</div>
+                    <div class="stage-icon">📊</div>
+                    <div class="stage-title">Research & Validate</div>
+                    <div class="stage-description">Build surveys, upload evidence, and collect customer validation data</div>
+                </a>
+
+                <a href="prioritization_prd.html" class="stage-card">
+                    <div class="stage-number">4</div>
+                    <div class="stage-icon">📋</div>
+                    <div class="stage-title">Prioritize & PRD</div>
+                    <div class="stage-description">Score capabilities, generate PRD, and link requirements to evidence</div>
+                </a>
+
+                <a href="handoff.html" class="stage-card">
+                    <div class="stage-number">5</div>
+                    <div class="stage-icon">🔗</div>
+                    <div class="stage-title">Handoff</div>
+                    <div class="stage-description">Export artifacts and hand off to development teams</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Recent Projects Section -->
+        <section class="projects-section">
+            <h2 class="section-title">Recent Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-name">Merchandising V1</div>
+                        <div class="project-status">
+                            <span class="status-dot"></span>
+                            Active
+                        </div>
+                    </div>
+                    <div class="project-details">
+                        <div class="project-stage">
+                            <div class="detail-label">Current Stage</div>
+                            <div class="detail-value">Research</div>
+                        </div>
+                        <div class="project-score">
+                            <div class="detail-label">Feasibility Score</div>
+                            <div class="score-value">7.87/10</div>
+                        </div>
+                    </div>
+                    <div class="project-date">Created on Feb 28, 2026</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Section -->
+        <section class="tools-section">
+            <h2 class="section-title">Tools & Resources</h2>
+            <div class="tools-grid">
+                <a href="master_dashboard.html" class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-name">Master Dashboard</div>
+                    </div>
+                    <div class="tool-tag analytics">Analytics</div>
+                </a>
+
+                <a href="interview_tracker.html" class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-name">Interview Tracker</div>
+                    </div>
+                    <div class="tool-tag research">Research</div>
+                </a>
+
+                <a href="commerce_expert.html" class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-name">Commerce Expert</div>
+                    </div>
+                    <div class="tool-tag agent">RAG Agent</div>
+                </a>
+
+                <a href="rag_notebook_template.html" class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-name">RAG Notebook</div>
+                    </div>
+                    <div class="tool-tag query">AI Query</div>
+                </a>
+
+                <a href="upload_content.html" class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-name">Upload Content</div>
+                    </div>
+                    <div class="tool-tag ingest">Ingest</div>
+                </a>
+
+                <div class="tool-card disabled">
+                    <div class="tool-header">
+                        <div class="tool-name">Competitive Intel Monitor</div>
+                    </div>
+                    <div class="tool-tag coming-soon">Coming Soon</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://edenger.app.n8n.cloud" target="_blank" class="footer-link">n8n Workflows</a>
+                <a href="https://docs.google.com/spreadsheets/d/1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w/edit" target="_blank" class="footer-link">Google Sheet</a>
+            </div>
+            <div class="footer-text">
+                &copy; 2026 My Product Agent. Built for Zuora Commerce.
+            </div>
         </div>
     </div>
 </body>
