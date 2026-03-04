@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Architecture & Health - My Product Agent</title>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #151c2c;
+            --bg-card-hover: #1a2332;
+            --border-subtle: rgba(71,85,120,0.25);
+            --border-accent: rgba(96,165,250,0.2);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            --accent-blue: #60a5fa;
+            --accent-indigo: #818cf8;
+            --accent-purple: #a78bfa;
+            --accent-cyan: #22d3ee;
+            --success: #34d399;
+            --success-dim: rgba(52,211,153,0.12);
+            --warning: #fbbf24;
+            --warning-dim: rgba(251,191,36,0.12);
+            --danger: #fb7185;
+            --danger-dim: rgba(251,113,133,0.12);
+            --blue-dim: rgba(96,165,250,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1360px; margin: 0 auto; padding: 0 2rem; }
+
+        /* ── Header ── */
+        .header {
+            background: rgba(10,14,26,0.92);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 1.5rem 0;
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+        .header-inner { max-width: 1360px; margin: 0 auto; padding: 0 2rem; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .back-link {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.82rem;
+            display: flex; align-items: center; gap: 6px; transition: color 0.2s; font-weight: 500;
+        }
+        .back-link:hover { color: var(--accent-blue); }
+        .back-link svg { width: 14px; height: 14px; }
+        .header-actions { display: flex; align-items: center; gap: 1.25rem; }
+        .last-checked { font-size: 0.78rem; color: var(--text-tertiary); font-weight: 500; }
+        .refresh-btn {
+            background: none; border: 1px solid var(--border-subtle); color: var(--text-secondary);
+            width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+            transition: all 0.25s; display: flex; align-items: center; justify-content: center;
+        }
+        .refresh-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: var(--blue-dim); }
+        .refresh-btn.spinning svg { animation: spin 0.8s linear infinite; }
+        .refresh-btn svg { width: 16px; height: 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .header-title-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .header-title {
+            font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .overall-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 5px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .overall-badge.healthy { background: var(--success-dim); border: 1px solid rgba(52,211,153,0.25); color: var(--success); }
+        .overall-badge.degraded { background: var(--warning-dim); border: 1px solid rgba(251,191,36,0.25); color: var(--warning); }
+        .overall-badge.down { background: var(--danger-dim); border: 1px solid rgba(251,113,133,0.25); color: var(--danger); }
+        .overall-badge.checking { background: var(--blue-dim); border: 1px solid var(--border-accent); color: var(--accent-blue); }
+
+        /* ── Status indicators ── */
+        .indicator { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+        .indicator.healthy { background: var(--success); box-shadow: 0 0 6px rgba(52,211,153,0.5); }
+        .indicator.warning { background: var(--warning); box-shadow: 0 0 6px rgba(251,191,36,0.4); }
+        .indicator.down { background: var(--danger); box-shadow: 0 0 6px rgba(251,113,133,0.4); }
+        .indicator.checking { background: var(--accent-blue); animation: pulse-check 1.5s infinite; }
+        .indicator.unknown { background: var(--text-tertiary); }
+        @keyframes pulse-check {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+
+        /* ── Section headings ── */
+        .section-heading {
+            font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1.2px; color: var(--text-tertiary);
+            margin: 3rem 0 1.25rem; display: flex; align-items: center; gap: 10px;
+        }
+        .section-heading::after {
+            content: ''; flex: 1; height: 1px; background: var(--border-subtle);
+        }
+
+        /* ── Architecture diagram ── */
+        .arch-wrapper { margin: 1.5rem 0 2rem; }
+        .arch-layer {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 10px; padding: 18px 22px; position: relative;
+        }
+        .layer-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(71,85,120,0.15);
+        }
+        .layer-icon { width: 18px; height: 18px; color: var(--text-tertiary); flex-shrink: 0; }
+        .layer-title { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); }
+        .layer-subtitle { font-size: 0.72rem; color: var(--text-tertiary); margin-left: auto; font-weight: 400; }
+        .nodes-row { display: flex; flex-wrap: wrap; gap: 8px; }
+        .node {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(21,28,44,0.8); border: 1px solid rgba(71,85,120,0.2);
+            border-radius: 6px; padding: 7px 12px; font-size: 0.78rem; font-weight: 500;
+            color: var(--text-primary); transition: all 0.2s; cursor: default;
+        }
+        .node:hover { border-color: rgba(96,165,250,0.3); background: rgba(96,165,250,0.04); }
+        .node svg { width: 14px; height: 14px; flex-shrink: 0; }
+        .node .indicator { width: 6px; height: 6px; }
+
+        .flow-connector {
+            display: flex; justify-content: center; align-items: center;
+            height: 32px; position: relative;
+        }
+        .flow-connector::before {
+            content: ''; position: absolute; left: 50%;
+            width: 1px; top: 0; bottom: 0;
+            background: linear-gradient(180deg, transparent, var(--border-accent), transparent);
+        }
+        .flow-label {
+            position: relative; z-index: 1;
+            background: var(--bg-primary); padding: 2px 12px; border-radius: 4px;
+            border: 1px solid rgba(71,85,120,0.2);
+            font-size: 0.68rem; color: var(--text-tertiary); font-weight: 500;
+        }
+
+        /* ── Workflow cards ── */
+        .wf-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 14px; margin: 1.25rem 0;
+        }
+        .wf-card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 10px; padding: 20px; transition: all 0.2s;
+        }
+        .wf-card:hover { border-color: rgba(96,165,250,0.25); background: var(--bg-card-hover); }
+        .wf-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .wf-icon-wrap {
+            width: 32px; height: 32px; border-radius: 8px; display: flex;
+            align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .wf-icon-wrap svg { width: 16px; height: 16px; }
+        .wf-icon-wrap.s1 { background: rgba(96,165,250,0.1); color: var(--accent-blue); }
+        .wf-icon-wrap.s2 { background: rgba(129,140,248,0.1); color: var(--accent-indigo); }
+        .wf-icon-wrap.s3 { background: rgba(34,211,238,0.1); color: var(--accent-cyan); }
+        .wf-icon-wrap.s4 { background: rgba(167,139,250,0.1); color: var(--accent-purple); }
+        .wf-icon-wrap.util { background: rgba(251,191,36,0.1); color: var(--warning); }
+        .wf-title { font-size: 0.92rem; font-weight: 600; color: var(--text-primary); }
+        .wf-tag {
+            margin-left: auto; font-size: 0.62rem; font-weight: 600;
+            padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+            letter-spacing: 0.5px; background: var(--blue-dim); color: var(--accent-blue);
+        }
+        .wf-endpoint {
+            font-family: 'SF Mono','JetBrains Mono','Fira Code',monospace;
+            font-size: 0.72rem; color: var(--accent-blue);
+            background: rgba(96,165,250,0.06); padding: 6px 10px;
+            border-radius: 5px; margin-bottom: 14px; word-break: break-all;
+            border: 1px solid rgba(96,165,250,0.08);
+        }
+        .wf-section-label {
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.8px;
+            color: var(--text-tertiary); margin-bottom: 6px; font-weight: 600;
+        }
+        .wf-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+        .wf-chip {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 9px; border-radius: 5px; font-size: 0.74rem;
+            background: rgba(21,28,44,0.9); border: 1px solid rgba(71,85,120,0.2);
+            color: var(--text-secondary); font-weight: 500;
+        }
+        .wf-chip .indicator { width: 5px; height: 5px; }
+        .wf-output {
+            font-size: 0.8rem; color: var(--text-secondary);
+            padding-top: 12px; border-top: 1px solid rgba(71,85,120,0.15); line-height: 1.5;
+        }
+        .wf-output strong { color: var(--text-primary); font-weight: 600; }
+
+        /* ── Health cards ── */
+        .health-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+            gap: 12px; margin: 1.25rem 0 3rem;
+        }
+        .svc-card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 10px; padding: 18px 16px; text-align: center; transition: all 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .svc-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: var(--text-tertiary); transition: background 0.3s;
+        }
+        .svc-card.healthy::before { background: var(--success); }
+        .svc-card.down::before { background: var(--danger); }
+        .svc-card.warning::before { background: var(--warning); }
+        .svc-card.checking::before { background: var(--accent-blue); }
+        .svc-card:hover { border-color: rgba(96,165,250,0.25); background: var(--bg-card-hover); }
+        .svc-icon-wrap {
+            width: 40px; height: 40px; border-radius: 10px; margin: 0 auto 10px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--blue-dim); color: var(--accent-blue);
+        }
+        .svc-icon-wrap svg { width: 20px; height: 20px; }
+        .svc-name { font-weight: 600; font-size: 0.85rem; margin-bottom: 8px; color: var(--text-primary); }
+        .svc-status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 3px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 600; margin-bottom: 10px;
+        }
+        .svc-status-badge.healthy { background: var(--success-dim); color: var(--success); }
+        .svc-status-badge.down { background: var(--danger-dim); color: var(--danger); }
+        .svc-status-badge.warning { background: var(--warning-dim); color: var(--warning); }
+        .svc-status-badge.checking { background: var(--blue-dim); color: var(--accent-blue); }
+        .svc-latency { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
+        .svc-latency.down { color: var(--danger); }
+        .svc-latency-unit { font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .svc-meta {
+            font-size: 0.7rem; color: var(--text-tertiary); border-top: 1px solid rgba(71,85,120,0.15);
+            padding-top: 8px; margin-top: 4px;
+        }
+        .svc-type-tag {
+            display: inline-block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 2px 7px; border-radius: 4px; background: rgba(71,85,120,0.15);
+            color: var(--text-tertiary); font-weight: 600; margin-top: 6px;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            border-top: 1px solid var(--border-subtle); padding: 2rem;
+            text-align: center; margin-top: 1rem;
+        }
+        .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .footer-link {
+            color: var(--text-tertiary); text-decoration: none; font-size: 0.82rem;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .footer-link:hover { color: var(--accent-blue); }
+        .footer-text { font-size: 0.75rem; color: var(--text-tertiary); }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .header-title { font-size: 1.25rem; }
+            .header-top { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+            .wf-grid { grid-template-columns: 1fr; }
+            .health-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+            .node { font-size: 0.72rem; padding: 5px 9px; }
+            .container { padding: 0 1rem; }
+        }
+        @media (max-width: 480px) {
+            .header-title { font-size: 1.1rem; }
+            .health-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+    <div class="header-inner">
+        <div class="header-top">
+            <a href="index.html" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                Back to Portal
+            </a>
+            <div class="header-actions">
+                <span class="last-checked">Last checked: <span id="lastCheckedTime">&mdash;</span></span>
+                <button class="refresh-btn" id="refreshBtn" title="Refresh health checks">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/><path d="M20.49 15a9 9 0 01-14.85 3.36L1 14"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="header-title-row">
+            <h1 class="header-title">System Architecture & Health</h1>
+            <span class="overall-badge checking" id="overallStatus">
+                <span class="indicator checking"></span>
+                Checking&hellip;
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ═══════ ARCHITECTURE DIAGRAM ═══════ -->
+    <div class="section-heading">Architecture Overview</div>
+    <div class="arch-wrapper">
+        <!-- Layer 1: Frontend -->
+        <div class="arch-layer">
+            <div class="layer-header">
+                <svg class="layer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                <span class="layer-title">Frontend</span>
+                <span class="layer-subtitle">GitHub Pages &middot; Static HTML / CSS / JS</span>
+            </div>
+            <div class="nodes-row">
+                <div class="node" data-health="github_pages">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Portal
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    Stage 1: Create
+                </div>
+                <div class="node">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    Stage 2: Describe
+                </div>
+                <div class="node">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    Stage 3: Research
+                </div>
+                <div class="node">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Stage 4: PRD
+                </div>
+                <div class="node">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                    Stage 5: Handoff
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-connector"><span class="flow-label">Webhook POST &rarr; JSON Payload</span></div>
+
+        <!-- Layer 2: Orchestration -->
+        <div class="arch-layer">
+            <div class="layer-header">
+                <svg class="layer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                <span class="layer-title">Orchestration</span>
+                <span class="layer-subtitle">n8n Cloud &middot; Workflow Automation</span>
+            </div>
+            <div class="nodes-row">
+                <div class="node" data-health="n8n">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    Master Pipeline
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node" data-health="n8n">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    Stage 2 Analyzer
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node" data-health="n8n">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    Form Creator
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node" data-health="n8n">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    PRD Generator
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node" data-health="n8n">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    Competitor Scraper
+                    <span class="indicator checking"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-connector"><span class="flow-label">API Calls &rarr; Data Read / Write</span></div>
+
+        <!-- Layer 3: Services -->
+        <div class="arch-layer">
+            <div class="layer-header">
+                <svg class="layer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                <span class="layer-title">Services</span>
+                <span class="layer-subtitle">External APIs & Data Stores</span>
+            </div>
+            <div class="nodes-row">
+                <div class="node" data-health="claude_api">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 014 4v2h2a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2h2V6a4 4 0 014-4z"/><circle cx="12" cy="15" r="1"/></svg>
+                    Claude API
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node" data-health="google_sheets">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                    Google Sheets
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node" data-health="pinecone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                    Pinecone
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node" data-health="google_drive">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+                    Google Drive
+                    <span class="indicator checking"></span>
+                </div>
+                <div class="node" data-health="google_forms">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+                    Google Forms
+                    <span class="indicator checking"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ WORKFLOW DETAILS ═══════ -->
+    <div class="section-heading">Workflow Details</div>
+    <div class="wf-grid" id="workflowGrid"></div>
+
+    <!-- ═══════ SERVICE HEALTH ═══════ -->
+    <div class="section-heading">Service Health</div>
+    <div class="health-grid" id="healthGrid"></div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<div class="footer">
+    <div class="footer-links">
+        <a href="index.html" class="footer-link">Back to Portal</a>
+        <a href="https://edenger.app.n8n.cloud" target="_blank" class="footer-link">n8n Workflows</a>
+        <a href="https://docs.google.com/spreadsheets/d/1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w/edit" target="_blank" class="footer-link">Google Sheet</a>
+    </div>
+    <div class="footer-text">&copy; 2026 My Product Agent &middot; Built for Zuora Commerce</div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   SVG ICON LIBRARY
+   ══════════════════════════════════════════════ */
+const svgIcons = {
+    github: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>',
+    workflow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+    brain: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 014 4v2h2a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2h2V6a4 4 0 014-4z"/><circle cx="12" cy="15" r="1"/></svg>',
+    grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>',
+    database: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+    folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>',
+    clipboard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>',
+    settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+    // Workflow-specific icons
+    folderPlus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
+    eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+    fileText: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>',
+};
+
+/* ══════════════════════════════════════════════
+   SERVICE & WORKFLOW DATA
+   ══════════════════════════════════════════════ */
+const services = [
+    { id:'github_pages', name:'GitHub Pages', icon:'github', type:'CDN',
+      url:'index.html', method:'cors', desc:'Static frontend hosting' },
+    { id:'n8n', name:'n8n Cloud', icon:'settings', type:'Orchestration',
+      url:'https://edenger.app.n8n.cloud', method:'no-cors', desc:'Workflow automation engine' },
+    { id:'claude_api', name:'Claude API', icon:'brain', type:'LLM',
+      url:'https://api.anthropic.com', method:'no-cors', desc:'AI analysis & generation (Sonnet 4)' },
+    { id:'google_sheets', name:'Google Sheets', icon:'grid', type:'Database',
+      url:'https://docs.google.com/spreadsheets/d/1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w/gviz/tq?tqx=out:json&tq=select+A+limit+1',
+      method:'cors', desc:'Master data store (10+ tabs)' },
+    { id:'pinecone', name:'Pinecone', icon:'database', type:'Vector DB',
+      url:'https://commerce-expert-8t9sj7i.svc.aped-4627-b74a.pinecone.io', method:'no-cors',
+      desc:'Competitor & customer RAG' },
+    { id:'google_drive', name:'Google Drive', icon:'folder', type:'Storage',
+      url:'https://www.googleapis.com/drive/v3/about', method:'no-cors',
+      desc:'Project folder structure' },
+    { id:'google_forms', name:'Google Forms', icon:'clipboard', type:'Forms',
+      url:'https://forms.googleapis.com', method:'no-cors', desc:'Research survey creation' }
+];
+
+const workflows = [
+    { name:'Create Project', icon:'folderPlus', cls:'s1', stage:'Stage 1',
+      webhook:'/webhook/mpa-create-project',
+      svcs:['Google Drive','Google Sheets'], svcIds:['google_drive','google_sheets'],
+      output:'Drive folder structure + _projects row + confirmation email' },
+    { name:'Analyze Idea', icon:'eye', cls:'s2', stage:'Stage 2',
+      webhook:'/webhook/mpa-analyze-idea',
+      svcs:['Claude API \u00d75','Pinecone \u00d72','Google Sheets'], svcIds:['claude_api','pinecone','google_sheets'],
+      output:'5 parallel analyses \u2192 _stage2_results + feasibility score (CI/BI/CTI)' },
+    { name:'Create Survey Form', icon:'clipboard', cls:'s3', stage:'Stage 3',
+      webhook:'/webhook/mpa-create-form',
+      svcs:['Google Forms','Google Sheets'], svcIds:['google_forms','google_sheets'],
+      output:'Survey form URL + linked response sheet' },
+    { name:'Generate PRD', icon:'fileText', cls:'s4', stage:'Stage 4',
+      webhook:'/webhook/mpa-generate-prd',
+      svcs:['Claude API','Google Sheets','Google Drive'], svcIds:['claude_api','google_sheets','google_drive'],
+      output:'PRD document (8K tokens) \u2192 Drive /PRD folder' },
+    { name:'Scrape Competitors', icon:'search', cls:'util', stage:'Utility',
+      webhook:'/webhook/mpa-scrape-competitors',
+      svcs:['HTTP Fetch','Claude API','Pinecone','Google Sheets'], svcIds:['','claude_api','pinecone','google_sheets'],
+      output:'Competitor vectors \u2192 Pinecone competitors namespace' }
+];
+
+/* ══════════════════════════════════════════════
+   HEALTH CHECKER — REAL PINGS
+   ══════════════════════════════════════════════ */
+const healthResults = {};
+let isChecking = false;
+
+async function checkService(svc) {
+    const start = performance.now();
+    const TIMEOUT = 6000;
+    try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), TIMEOUT);
+        const opts = { method:'HEAD', cache:'no-cache', signal:ctrl.signal };
+        if (svc.method === 'no-cors') opts.mode = 'no-cors';
+        await fetch(svc.url, opts);
+        clearTimeout(timer);
+        const latency = Math.round(performance.now() - start);
+        return { id:svc.id, status: latency > 2500 ? 'warning' : 'healthy', latency, ts:new Date() };
+    } catch(e) {
+        if (e.name === 'AbortError')
+            return { id:svc.id, status:'down', latency:null, ts:new Date(), err:'Timeout' };
+        return { id:svc.id, status:'down', latency:null, ts:new Date(), err:e.message };
+    }
+}
+
+async function runAllChecks() {
+    if (isChecking) return;
+    isChecking = true;
+    document.getElementById('refreshBtn').classList.add('spinning');
+    setOverall('checking','Checking\u2026');
+    services.forEach(s => { updateCard(s.id,'checking',null); updateDots(s.id,'checking'); });
+
+    const results = await Promise.allSettled(services.map(s => checkService(s)));
+    results.forEach(r => {
+        if (r.status === 'fulfilled') {
+            const v = r.value;
+            healthResults[v.id] = v;
+            updateCard(v.id, v.status, v.latency, v.ts);
+            updateDots(v.id, v.status);
+        }
+    });
+
+    const sts = Object.values(healthResults).map(r => r.status);
+    const down = sts.filter(s => s==='down').length;
+    const warn = sts.filter(s => s==='warning').length;
+    if (down === 0 && warn === 0) setOverall('healthy','All Systems Operational');
+    else if (down >= sts.length) setOverall('down','Major Outage');
+    else if (down > 0) setOverall('degraded', down+' Service'+(down>1?'s':'')+' Down');
+    else setOverall('degraded', warn+' Slow');
+
+    updateWfDots();
+    document.getElementById('lastCheckedTime').textContent = new Date().toLocaleTimeString();
+    document.getElementById('refreshBtn').classList.remove('spinning');
+    isChecking = false;
+}
+
+function setOverall(status, text) {
+    const el = document.getElementById('overallStatus');
+    el.className = 'overall-badge '+status;
+    el.innerHTML = '<span class="indicator '+status+'"></span>'+text;
+}
+
+function updateCard(id, status, latency, ts) {
+    const c = document.querySelector('.svc-card[data-id="'+id+'"]');
+    if (!c) return;
+    c.className = 'svc-card '+status;
+    const b = c.querySelector('.svc-status-badge');
+    b.className = 'svc-status-badge '+status;
+    b.innerHTML = '<span class="indicator '+status+'"></span>'
+        +(status==='healthy'?'Operational':status==='warning'?'Degraded':status==='down'?'Unreachable':'Checking');
+    const l = c.querySelector('.svc-latency');
+    l.textContent = status==='checking'?'\u2026':(latency!==null?latency:'--');
+    l.className = 'svc-latency'+(status==='down'?' down':'');
+    if (ts) c.querySelector('.svc-time').textContent = new Date(ts).toLocaleTimeString();
+}
+
+function updateDots(svcId, status) {
+    document.querySelectorAll('.node[data-health="'+svcId+'"] .indicator').forEach(d => {
+        d.className = 'indicator '+status;
+    });
+}
+
+function updateWfDots() {
+    document.querySelectorAll('.wf-chip[data-sid]').forEach(chip => {
+        const r = healthResults[chip.dataset.sid];
+        if (r) chip.querySelector('.indicator').className = 'indicator '+r.status;
+    });
+}
+
+/* ══════════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════════ */
+function renderWorkflows() {
+    document.getElementById('workflowGrid').innerHTML = workflows.map(w => {
+        const chips = w.svcs.map((s,i) => {
+            const sid = w.svcIds[i]||'';
+            return '<span class="wf-chip" data-sid="'+sid+'"><span class="indicator checking"></span>'+s+'</span>';
+        }).join('');
+        return '<div class="wf-card">'
+            +'<div class="wf-top"><span class="wf-icon-wrap '+w.cls+'">'+(svgIcons[w.icon]||'')+'</span>'
+            +'<span class="wf-title">'+w.name+'</span>'
+            +'<span class="wf-tag">'+w.stage+'</span></div>'
+            +'<div class="wf-endpoint">'+w.webhook+'</div>'
+            +'<div class="wf-section-label">Services Called</div>'
+            +'<div class="wf-chips">'+chips+'</div>'
+            +'<div class="wf-output"><strong>Output: </strong>'+w.output+'</div>'
+            +'</div>';
+    }).join('');
+}
+
+function renderHealth() {
+    document.getElementById('healthGrid').innerHTML = services.map(s =>
+        '<div class="svc-card checking" data-id="'+s.id+'">'
+        +'<div class="svc-icon-wrap">'+(svgIcons[s.icon]||'')+'</div>'
+        +'<div class="svc-name">'+s.name+'</div>'
+        +'<div class="svc-status-badge checking"><span class="indicator checking"></span>Checking</div>'
+        +'<div class="svc-latency">\u2026</div>'
+        +'<div class="svc-latency-unit">Response Time (ms)</div>'
+        +'<div class="svc-meta"><div class="svc-time">\u2014</div>'
+        +'<div style="margin-top:3px">'+s.desc+'</div></div>'
+        +'<span class="svc-type-tag">'+s.type+'</span>'
+        +'</div>'
+    ).join('');
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    renderWorkflows();
+    renderHealth();
+    runAllChecks();
+    document.getElementById('refreshBtn').addEventListener('click', () => { if(!isChecking) runAllChecks(); });
+    setInterval(() => { if(!isChecking) runAllChecks(); }, 60000);
+});
+</script>
+</body>
+</html>
