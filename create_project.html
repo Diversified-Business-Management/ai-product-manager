@@ -598,15 +598,36 @@
                     }
                 );
 
-                const responseData = await response.json();
+                // Try to parse JSON response, handle empty body gracefully
+                let responseData = {};
+                const responseText = await response.text();
+                if (responseText) {
+                    try {
+                        responseData = JSON.parse(responseText);
+                    } catch (parseError) {
+                        // If response is not JSON but request succeeded, treat as success
+                        if (response.ok) {
+                            responseData = { success: true };
+                        } else {
+                            throw new Error('Server returned an invalid response');
+                        }
+                    }
+                } else if (response.ok) {
+                    // Empty body but 200 OK means the workflow completed successfully
+                    responseData = { success: true, message: 'Project created successfully.' };
+                }
 
                 if (!response.ok) {
-                    throw new Error(responseData.message || 'Failed to create project');
+                    throw new Error(responseData.message || responseData.error || 'Failed to create project');
+                }
+
+                // If we got a validation error in the body
+                if (responseData.success === false) {
+                    throw new Error(responseData.error || responseData.message || 'Failed to create project');
                 }
 
                 // Handle success
                 handleSuccess(responseData, formData.project_name);
-
             } catch (error) {
                 // Handle error
                 handleError(error.message);
