@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Product Agent — PM Dashboard</title>
+<title>My Product Agent â PM Dashboard</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root { --primary: #1F4E79; --primary-light: #2E75B6; --accent: #FF6B35; --success: #059669; --warning: #D97706; --danger: #DC2626; --bg: #F8FAFC; --card: #FFF; --text: #1E293B; --text-light: #64748B; --border: #E2E8F0; }
@@ -144,7 +144,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     <span class="header-badge">ZUORA COMMERCE</span>
   </div>
   <div class="header-actions">
-    <a href="project_wizard.html" class="btn btn-accent">+ New Project</a>
+    <a href="create_project.html" class="btn btn-accent">+ New Project</a>
     <a href="commerce_expert.html" class="btn btn-outline">Commerce Expert</a>
   </div>
 </div>
@@ -159,6 +159,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <a href="commerce_expert.html">Commerce Expert</a>
   <a href="upload_content.html">Upload Content</a>
   <a href="rag_notebook_template.html">RAG Management</a>
+  <a href="system_architecture.html">Architecture</a>
 </div>
 
 <!-- Main Content -->
@@ -235,9 +236,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div class="sidebar-card" style="margin-bottom: 16px;">
         <div class="sidebar-header">Score Distribution</div>
         <div class="sidebar-body" id="score-dist">
-          <div class="sidebar-item"><span>High (≥7.0)</span> <span class="score score-high" id="dist-high">5</span></div>
-          <div class="sidebar-item"><span>Medium (4.0–6.9)</span> <span class="score score-mid" id="dist-mid">12</span></div>
-          <div class="sidebar-item"><span>Low (<4.0)</span> <span class="score score-low" id="dist-low">4</span></div>
+          <div class="sidebar-item"><span>High (&ge;7.0)</span> <span class="score score-high" id="dist-high">5</span></div>
+          <div class="sidebar-item"><span>Medium (4.0&ndash;6.9)</span> <span class="score score-mid" id="dist-mid">12</span></div>
+          <div class="sidebar-item"><span>Low (&lt;4.0)</span> <span class="score score-low" id="dist-low">4</span></div>
         </div>
       </div>
 
@@ -247,19 +248,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <div class="sidebar-body" id="activity-list">
           <div class="sidebar-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
             <span style="font-weight:600;">Score Recalculation</span>
-            <span style="font-size:11px; color:var(--text-light);">21 capabilities updated · 2h ago</span>
+            <span style="font-size:11px; color:var(--text-light);">21 capabilities updated &middot; 2h ago</span>
           </div>
           <div class="sidebar-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
             <span style="font-weight:600;">Signal Ingested</span>
-            <span style="font-size:11px; color:var(--text-light);">Acme Corp interview transcript · 5h ago</span>
+            <span style="font-size:11px; color:var(--text-light);">Acme Corp interview transcript &middot; 5h ago</span>
           </div>
           <div class="sidebar-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
             <span style="font-weight:600;">Stage 2 Assessment</span>
-            <span style="font-size:11px; color:var(--text-light);">Agentic Commerce project · 1d ago</span>
+            <span style="font-size:11px; color:var(--text-light);">Agentic Commerce project &middot; 1d ago</span>
           </div>
           <div class="sidebar-item" style="flex-direction:column; align-items:flex-start; gap:2px;">
             <span style="font-weight:600;">PRD Generated</span>
-            <span style="font-size:11px; color:var(--text-light);">Composable Checkout · 2d ago</span>
+            <span style="font-size:11px; color:var(--text-light);">Composable Checkout &middot; 2d ago</span>
           </div>
         </div>
       </div>
@@ -299,15 +300,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <!-- Footer -->
 <div class="footer">
-  My Product Agent — Zuora Commerce Intelligence Platform ·
-  <a href="master_dashboard.html">Multi-Project View</a> ·
-  <a href="system_architecture.html">System Architecture</a> ·
+  My Product Agent &mdash; Zuora Commerce Intelligence Platform &middot;
+  <a href="master_dashboard.html">Multi-Project View</a> &middot;
+  <a href="system_architecture.html">System Architecture</a> &middot;
   <a href="rag_notebook_template.html">RAG Management</a>
-  <br><span style="font-size:11px;">Data refreshed from Google Sheets via gviz · Scores recalculated on signal ingestion</span>
+  <br><span style="font-size:11px;">Data refreshed from Google Sheets via gviz &middot; Scores recalculated on signal ingestion</span>
 </div>
 
 <script>
-// Google Sheets gviz Integration
+// âââ Google Sheets gviz Integration âââ
 const SHEET_ID = '1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w';
 
 function gvizURL(sheetName, query) {
@@ -340,7 +341,7 @@ async function fetchSheet(sheetName, query) {
   }
 }
 
-// Fallback Dummy Data
+// âââ Fallback Dummy Data âââ
 const DUMMY_CAPABILITIES = [
   { capability_name: 'Multi-Currency Support', ci_score: 7.2, bi_score: 8.1, cti_score: 5.4, total_score: 7.3, confidence: 85, trend: 'UP', signal_count: 14 },
   { capability_name: 'Subscription Billing Engine', ci_score: 8.5, bi_score: 9.0, cti_score: 6.2, total_score: 8.2, confidence: 92, trend: 'UP', signal_count: 22 },
@@ -370,9 +371,8 @@ const DUMMY_PROJECTS = [
   { project_id: 'PROJ-composable-checkout-001', name: 'Composable Checkout', stage: '5', status: 'active', score: 7.0 },
   { project_id: 'PROJ-usage-billing-001', name: 'Usage-Based Billing v2', stage: '3', status: 'active', score: 6.9 }
 ];
-</script>
-<script>
-// Render Functions
+
+// âââ Render Functions âââ
 function scoreClass(val) {
   if (val >= 7) return 'score-high';
   if (val >= 4) return 'score-mid';
@@ -401,9 +401,9 @@ function renderCapabilities(data) {
   const tbody = document.getElementById('cap-body');
   tbody.innerHTML = data.map(c => {
     const total = Number(c.total_score) || 0;
-    const ci = Number(c.ci_score) || 0;
-    const bi = Number(c.bi_score) || 0;
-    const cti = Number(c.cti_score) || 0;
+    const ci = Number(c.customer_impact || c.ci_score) || 0;
+    const bi = Number(c.business_impact || c.bi_score) || 0;
+    const cti = Number(c.cost_to_implement || c.cti_score) || 0;
     const conf = Number(c.confidence) || 0;
     const signals = Number(c.signal_count) || 0;
     const name = c.capability_name || c.capability_id || 'Unknown';
@@ -412,7 +412,7 @@ function renderCapabilities(data) {
       '<td style="text-align:right;" class="score ' + scoreClass(ci) + '">' + ci.toFixed(1) + '</td>' +
       '<td style="text-align:right;" class="score ' + scoreClass(bi) + '">' + bi.toFixed(1) + '</td>' +
       '<td style="text-align:right;" class="score ' + scoreClass(cti) + '">' + cti.toFixed(1) + '</td>' +
-      '<td style="text-align:right;" class="score ' + scoreClass(total) + '">' + total.toFixed(1) + '</td>' +
+      '<td style="text-align:right;" class="score ' + scoreClass(total) + '" style="font-size:14px;">' + total.toFixed(1) + '</td>' +
       '<td>' + confHTML(conf) + '</td>' +
       '<td>' + trendHTML(c.trend) + '</td>' +
       '<td style="text-align:right;">' + signals + '</td>' +
@@ -421,6 +421,7 @@ function renderCapabilities(data) {
 
   document.getElementById('cap-count').textContent = data.length + ' capabilities';
 
+  // Update KPIs
   const avgScore = data.reduce((s, c) => s + (Number(c.total_score) || 0), 0) / data.length;
   const avgConf = data.reduce((s, c) => s + (Number(c.confidence) || 0), 0) / data.length;
   const totalSignals = data.reduce((s, c) => s + (Number(c.signal_count) || 0), 0);
@@ -429,6 +430,7 @@ function renderCapabilities(data) {
   document.getElementById('kpi-signals').textContent = totalSignals;
   document.getElementById('kpi-confidence').textContent = Math.round(avgConf) + '%';
 
+  // Score distribution
   let high = 0, mid = 0, low = 0;
   data.forEach(c => {
     const t = Number(c.total_score) || 0;
@@ -440,18 +442,22 @@ function renderCapabilities(data) {
   document.getElementById('dist-mid').textContent = mid;
   document.getElementById('dist-low').textContent = low;
 
+  // Store for sorting
   window._capData = data;
 }
 
 function renderProjects(data) {
   const el = document.getElementById('projects-list');
   if (!data || data.length === 0) {
-    el.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-light); font-size:13px;">No projects yet. <a href="project_wizard.html" style="color:var(--primary-light);">Create one</a></div>';
+    el.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-light); font-size:13px;">No projects yet. <a href="create_project.html" style="color:var(--primary-light);">Create one</a></div>';
     return;
   }
+  const stageToNum = { 'create': '1', 'assessment': '2', 'research': '3', 'survey': '4', 'prd': '5', 'poc': '6' };
   el.innerHTML = data.map(p => {
-    const stg = p.stage || '1';
+    const rawStage = (p.stage || '1').toString().toLowerCase();
+    const stg = stageToNum[rawStage] || rawStage;
     const stageLabels = { '1': 'Create', '2': 'Assessment', '3': 'Research', '4': 'Survey', '5': 'PRD', '6': 'POC' };
+    const score = Number(p.feasibility_score || p.score) || 0;
     return '<div class="sidebar-item" style="flex-direction:column; align-items:flex-start; gap:4px;">' +
       '<div style="display:flex; justify-content:space-between; width:100%; align-items:center;">' +
         '<span style="font-weight:600;">' + (p.name || p.project_id || 'Unnamed') + '</span>' +
@@ -459,14 +465,15 @@ function renderProjects(data) {
       '</div>' +
       '<div style="display:flex; gap:12px; font-size:11px; color:var(--text-light);">' +
         '<span class="status status-' + (p.status || 'active') + '"><span class="status-dot"></span> ' + (p.status || 'active') + '</span>' +
-        (p.score ? '<span>Score: <strong class="' + scoreClass(Number(p.score)) + '">' + Number(p.score).toFixed(1) + '</strong></span>' : '') +
+        (score ? '<span>Score: <strong class="' + scoreClass(score) + '">' + score.toFixed(1) + '</strong></span>' : '') +
       '</div>' +
     '</div>';
   }).join('');
+
   document.getElementById('kpi-projects').textContent = data.length;
 }
 
-// Sorting
+// âââ Sorting âââ
 let sortCol = 'total';
 let sortAsc = false;
 
@@ -475,16 +482,18 @@ document.querySelectorAll('#cap-table th[data-col]').forEach(th => {
     const col = th.dataset.col;
     if (sortCol === col) sortAsc = !sortAsc;
     else { sortCol = col; sortAsc = false; }
+
     document.querySelectorAll('#cap-table th').forEach(t => t.classList.remove('sorted'));
     th.classList.add('sorted');
     th.querySelector('.sort-arrow').innerHTML = sortAsc ? '&#9650;' : '&#9660;';
+
     const sorted = [...window._capData].sort((a, b) => {
       let va, vb;
       switch (col) {
         case 'name': va = (a.capability_name || '').toLowerCase(); vb = (b.capability_name || '').toLowerCase(); return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
-        case 'ci': va = Number(a.ci_score) || 0; vb = Number(b.ci_score) || 0; break;
-        case 'bi': va = Number(a.bi_score) || 0; vb = Number(b.bi_score) || 0; break;
-        case 'cti': va = Number(a.cti_score) || 0; vb = Number(b.cti_score) || 0; break;
+        case 'ci': va = Number(a.customer_impact || a.ci_score) || 0; vb = Number(b.customer_impact || b.ci_score) || 0; break;
+        case 'bi': va = Number(a.business_impact || a.bi_score) || 0; vb = Number(b.business_impact || b.bi_score) || 0; break;
+        case 'cti': va = Number(a.cost_to_implement || a.cti_score) || 0; vb = Number(b.cost_to_implement || b.cti_score) || 0; break;
         case 'total': va = Number(a.total_score) || 0; vb = Number(b.total_score) || 0; break;
         case 'confidence': va = Number(a.confidence) || 0; vb = Number(b.confidence) || 0; break;
         case 'trend': { const order = { 'UP': 3, 'STABLE': 2, 'DOWN': 1 }; va = order[(a.trend || '').toUpperCase()] || 2; vb = order[(b.trend || '').toUpperCase()] || 2; break; }
@@ -497,18 +506,26 @@ document.querySelectorAll('#cap-table th[data-col]').forEach(th => {
   });
 });
 
-// Init: Try gviz, fall back to dummy
+// âââ Init: Try gviz, fall back to dummy âââ
 async function init() {
+  // Load capabilities
   const caps = await fetchSheet('capabilities');
-  if (caps && caps.length > 0) { renderCapabilities(caps); }
-  else { renderCapabilities(DUMMY_CAPABILITIES); }
+  if (caps && caps.length > 0) {
+    renderCapabilities(caps);
+  } else {
+    renderCapabilities(DUMMY_CAPABILITIES);
+  }
 
-  const projects = await fetchSheet('projects');
-  if (projects && projects.length > 0) { renderProjects(projects); }
-  else { renderProjects(DUMMY_PROJECTS); }
+  // Load projects
+  const projects = await fetchSheet('_projects');
+  if (projects && projects.length > 0) {
+    renderProjects(projects);
+  } else {
+    renderProjects(DUMMY_PROJECTS);
+  }
 }
 
 init();
 </script>
 </body>
-          </html>
+</html>
