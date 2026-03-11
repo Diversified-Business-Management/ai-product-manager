@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Product Agent - Product Validation Platform</title>
+    <title>My Product Agent - Dashboard</title>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <style>
         * {
             margin: 0;
@@ -11,674 +12,459 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-dark: #0f172a;
-            --secondary-dark: #1e293b;
-            --text-light: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent-blue: #60a5fa;
-            --accent-purple: #a78bfa;
-            --success-green: #10b981;
-            --warning-amber: #f59e0b;
-            --danger-rose: #f43f5e;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
-            color: var(--text-light);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background-color: #F0F4F8;
+            color: #333;
+            line-height: 1.5;
         }
 
-        /* Header Section */
-        .header {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.8));
-            backdrop-filter: blur(10px);
-            padding: 3rem 2rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(96, 165, 250, 0.1);
-            margin-bottom: 3rem;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        .header-badges {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(96, 165, 250, 0.1);
-            border: 1px solid rgba(96, 165, 250, 0.2);
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .status-dot {
-            display: inline-flex;
-            width: 8px;
-            height: 8px;
-            background: var(--success-green);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            }
-            50% {
-                opacity: 0.7;
-                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.3);
-            }
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        nav {
+            background-color: white;
+            border-bottom: 1px solid #E0E8F0;
             padding: 0 2rem;
-        }
-
-        /* Pipeline Section */
-        .pipeline-section {
-            margin-bottom: 4rem;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            color: var(--text-light);
-        }
-
-        .pipeline {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .pipeline-connector {
-            position: absolute;
-            top: 2.5rem;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg,
-                rgba(96, 165, 250, 0.2) 0%,
-                rgba(96, 165, 250, 0.4) 50%,
-                rgba(96, 165, 250, 0.2) 100%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .stage-card {
-            flex: 1;
-            min-width: 160px;
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.6));
-            border: 1px solid rgba(96, 165, 250, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            z-index: 1;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .stage-card:hover {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.9));
-            border-color: rgba(96, 165, 250, 0.5);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(96, 165, 250, 0.1);
-        }
-
-        .stage-number {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin: 0 auto;
-        }
-
-        .stage-icon {
-            font-size: 2rem;
-        }
-
-        .stage-title {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-light);
-        }
-
-        .stage-description {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        /* Projects Section */
-        .projects-section {
-            margin-bottom: 4rem;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .project-card {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.6));
-            border: 1px solid rgba(96, 165, 250, 0.2);
-            border-radius: 12px;
-            border-left: 4px solid var(--accent-blue);
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .project-card:hover {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.9));
-            border-color: rgba(96, 165, 250, 0.5);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(96, 165, 250, 0.1);
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 1rem;
-        }
-
-        .project-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-light);
-        }
-
-        .project-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.3rem 0.8rem;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--success-green);
-        }
-
-        .project-status.inactive {
-            background: rgba(148, 163, 184, 0.1);
-            border-color: rgba(148, 163, 184, 0.3);
-            color: var(--text-muted);
-        }
-
-        .project-details {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            height: 60px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
-        .project-stage {
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-        }
+        .nav-left { display: flex; align-items: center; gap: 2rem; }
+        .nav-title { font-size: 18px; font-weight: 600; color: #1F4E79; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: #555; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: #2E75B6; }
+        .nav-links a.active { color: #2E75B6; border-bottom: 2px solid #2E75B6; padding-bottom: 5px; }
+        .nav-dropdown { position: relative; }
+        .dropdown-btn { background: none; border: none; color: #555; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+        .dropdown-btn:hover { color: #2E75B6; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #E0E8F0; border-radius: 4px; min-width: 150px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); z-index: 100; }
+        .dropdown-menu.active { display: block; }
+        .dropdown-menu a { display: block; padding: 10px 16px; color: #555; text-decoration: none; font-size: 13px; transition: background-color 0.2s; }
+        .dropdown-menu a:hover { background-color: #F0F4F8; color: #2E75B6; }
 
-        .detail-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .detail-value {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-light);
-        }
-
-        .project-score {
-            text-align: right;
-        }
-
-        .score-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .project-date {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            border-top: 1px solid rgba(96, 165, 250, 0.1);
-            padding-top: 1rem;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: var(--text-muted);
-        }
-
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        /* Tools Section */
-        .tools-section {
-            margin-bottom: 4rem;
-        }
-
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .tool-card {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.6));
-            border: 1px solid rgba(96, 165, 250, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .tool-card:hover {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.9));
-            border-color: rgba(96, 165, 250, 0.5);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(96, 165, 250, 0.1);
-        }
-
-        .tool-card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .tool-card.disabled:hover {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.6));
-            border-color: rgba(96, 165, 250, 0.2);
-            transform: none;
-            box-shadow: none;
-        }
-
-        .tool-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            gap: 1rem;
-        }
-
-        .tool-name {
-            font-weight: 600;
-            font-size: 1.05rem;
-            color: var(--text-light);
-        }
-
-        .tool-tag {
-            display: inline-flex;
-            padding: 0.25rem 0.75rem;
-            background: rgba(96, 165, 250, 0.1);
-            border: 1px solid rgba(96, 165, 250, 0.2);
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            white-space: nowrap;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .tool-tag.analytics {
-            background: rgba(96, 165, 250, 0.1);
-            border-color: rgba(96, 165, 250, 0.3);
-            color: var(--accent-blue);
-        }
-
-        .tool-tag.research {
-            background: rgba(167, 139, 250, 0.1);
-            border-color: rgba(167, 139, 250, 0.3);
-            color: var(--accent-purple);
-        }
-
-        .tool-tag.agent {
-            background: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.3);
-            color: var(--warning-amber);
-        }
-
-        .tool-tag.query {
-            background: rgba(251, 146, 60, 0.1);
-            border-color: rgba(251, 146, 60, 0.3);
-            color: #fb923c;
-        }
-
-        .tool-tag.ingest {
-            background: rgba(20, 184, 166, 0.1);
-            border-color: rgba(20, 184, 166, 0.3);
-            color: #14b8a6;
-        }
-
-        .tool-tag.coming-soon {
-            background: rgba(244, 63, 94, 0.1);
-            border-color: rgba(244, 63, 94, 0.3);
-            color: var(--danger-rose);
-        }
-
-        .tool-description {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        /* Footer */
-        .footer {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.8));
-            border-top: 1px solid rgba(96, 165, 250, 0.1);
-            padding: 2rem;
-            margin-top: 4rem;
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-link {
-            color: var(--accent-blue);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-link:hover {
-            color: var(--accent-purple);
-        }
-
-        .footer-text {
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header-title {
-                font-size: 2rem;
-            }
-
-            .header-subtitle {
-                font-size: 1rem;
-            }
-
-            .pipeline {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            .pipeline-connector {
-                display: none;
-            }
-
-            .stage-card {
-                min-width: unset;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tools-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header-badges {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                padding: 2rem 1rem;
-                margin-bottom: 2rem;
-            }
-
-            .header-title {
-                font-size: 1.5rem;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-
-            .pipeline-section,
-            .projects-section,
-            .tools-section {
-                margin-bottom: 2rem;
-            }
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .kpi-card { background: white; border-radius: 6px; padding: 1.5rem; border: 1px solid #E0E8F0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        .kpi-label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+        .kpi-value { font-size: 32px; font-weight: 700; color: #1F4E79; margin-bottom: 0.5rem; }
+        .kpi-change { font-size: 12px; color: #666; }
+        .page-header { margin-bottom: 2rem; }
+        .page-title { font-size: 28px; font-weight: 700; color: #1F4E79; margin-bottom: 0.5rem; }
+        .page-subtitle { font-size: 14px; color: #888; }
+        .section { margin-bottom: 2.5rem; }
+        .section-title { font-size: 16px; font-weight: 600; color: #1F4E79; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .table-wrapper { background: white; border-radius: 6px; border: 1px solid #E0E8F0; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background-color: #F9FAFB; border-bottom: 1px solid #E0E8F0; }
+        th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.4px; }
+        td { padding: 12px 16px; border-bottom: 1px solid #F0F4F8; font-size: 13px; color: #333; }
+        tbody tr:hover { background-color: #FAFBFC; }
+        tbody tr:last-child td { border-bottom: none; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 3px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .badge-active { background-color: #E8F5E9; color: #2E7D32; }
+        .badge-in-progress { background-color: #FFF3E0; color: #E65100; }
+        .badge-pending { background-color: #F3E5F5; color: #6A1B9A; }
+        .badge-paused { background-color: #ECEFF1; color: #455A64; }
+        .stage-badge { display: inline-block; background-color: #E3F2FD; color: #1565C0; padding: 4px 12px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+        .score { font-weight: 600; color: #1F4E79; }
+        .loading { display: flex; align-items: center; justify-content: center; padding: 40px; color: #888; font-size: 14px; }
+        .chart-container { background: white; border-radius: 6px; border: 1px solid #E0E8F0; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        #capabilityChart { width: 100%; height: 400px; }
+        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+        .action-btn { background: white; border: 1px solid #E0E8F0; border-radius: 6px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: #1F4E79; font-weight: 500; font-size: 13px; }
+        .action-btn:hover { background-color: #F0F4F8; border-color: #2E75B6; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+        footer { background-color: white; border-top: 1px solid #E0E8F0; padding: 2rem; text-align: center; font-size: 12px; color: #888; margin-top: 3rem; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .footer-links a { color: #2E75B6; text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: #1F4E79; }
+        @media (max-width: 768px) { .nav-links { gap: 1rem; font-size: 12px; } .container { padding: 1rem; } .kpi-row { grid-template-columns: repeat(2, 1fr); gap: 1rem; } .page-title { font-size: 22px; } table { font-size: 12px; } th, td { padding: 8px 12px; } }
     </style>
 </head>
 <body>
-    <!-- Header Section -->
-    <div class="header">
-        <div class="header-content">
-            <h1 class="header-title">My Product Agent</h1>
-            <p class="header-subtitle">AI-Powered Product Intelligence — From Idea to Launch</p>
-            <div class="header-badges">
-                <div class="badge">Validate • Research • Prioritize • Ship</div>
-                <div class="badge">
-                    <span class="status-dot"></span>
-                    9 Workflows Active
-                </div>
-            </div>
+    <nav>
+        <div class="nav-left">
+            <div class="nav-title">My Product Agent</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Dashboard</a></li>
+                <li><a href="create_project.html">Projects</a></li>
+                <li><a href="commerce_expert.html">Knowledge</a></li>
+                <li class="nav-dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown(event)">Tools &#9660;</button>
+                    <div class="dropdown-menu">
+                        <a href="interview_tracker.html">Interview Tracker</a>
+                        <a href="upload_content.html">Upload Content</a>
+                        <a href="rag_management.html">RAG Management</a>
+                        <a href="describe_idea.html">Submit Idea</a>
+                        <a href="prioritization_prd.html">PRD Generator</a>
+                    </div>
+                </li>
+            </ul>
         </div>
-    </div>
+    </nav>
 
-    <!-- Main Container -->
     <div class="container">
-        <!-- Pipeline Section -->
-        <section class="pipeline-section">
-            <h2 class="section-title">5-Stage Pipeline</h2>
-            <div class="pipeline">
-                <div class="pipeline-connector"></div>
+        <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Project portfolio, capability tracking, and signals overview</p>
+        </div>
 
-                <a href="create_project.html" class="stage-card">
-                    <div class="stage-number">1</div>
-                    <div class="stage-icon">📁</div>
-                    <div class="stage-title">Create Project</div>
-                    <div class="stage-description">Set up project structure, Drive folders, and initial configuration</div>
-                </a>
+        <div class="kpi-row">
+            <div class="kpi-card"><div class="kpi-label">Active Projects</div><div class="kpi-value" id="kpiActiveProjects">-</div><div class="kpi-change">Projects in progress</div></div>
+            <div class="kpi-card"><div class="kpi-label">Capabilities Tracked</div><div class="kpi-value">21</div><div class="kpi-change">Product dimensions</div></div>
+            <div class="kpi-card"><div class="kpi-label">Avg Feasibility Score</div><div class="kpi-value" id="kpiAvgFeasibility">-</div><div class="kpi-change">Weighted average</div></div>
+            <div class="kpi-card"><div class="kpi-label">Signals Collected</div><div class="kpi-value" id="kpiSignalsCollected">-</div><div class="kpi-change">Data points indexed</div></div>
+        </div>
 
-                <a href="describe_idea.html" class="stage-card">
-                    <div class="stage-number">2</div>
-                    <div class="stage-icon">💡</div>
-                    <div class="stage-title">Describe Idea</div>
-                    <div class="stage-description">Submit your idea for AI-powered preliminary assessment with 5 parallel analyses</div>
-                </a>
-
-                <a href="research_hub.html" class="stage-card">
-                    <div class="stage-number">3</div>
-                    <div class="stage-icon">📊</div>
-                    <div class="stage-title">Research & Validate</div>
-                    <div class="stage-description">Build surveys, upload evidence, and collect customer validation data</div>
-                </a>
-
-                <a href="prioritization_prd.html" class="stage-card">
-                    <div class="stage-number">4</div>
-                    <div class="stage-icon">📋</div>
-                    <div class="stage-title">Prioritize & PRD</div>
-                    <div class="stage-description">Score capabilities, generate PRD, and link requirements to evidence</div>
-                </a>
-
-                <a href="handoff.html" class="stage-card">
-                    <div class="stage-number">5</div>
-                    <div class="stage-icon">🔗</div>
-                    <div class="stage-title">Handoff</div>
-                    <div class="stage-description">Export artifacts and hand off to development teams</div>
-                </a>
+        <div class="section">
+            <div class="section-title">Quick Actions</div>
+            <div class="quick-actions">
+                <a href="create_project.html" class="action-btn">Create Project</a>
+                <a href="describe_idea.html" class="action-btn">Submit Idea</a>
+                <a href="upload_content.html" class="action-btn">Upload Content</a>
+                <a href="commerce_expert.html" class="action-btn">Commerce Expert</a>
+                <a href="rag_management.html" class="action-btn">RAG Management</a>
             </div>
-        </section>
+        </div>
 
-        <!-- Recent Projects Section -->
-        <section class="projects-section">
-            <h2 class="section-title">Recent Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-name">Merchandising V1</div>
-                        <div class="project-status">
-                            <span class="status-dot"></span>
-                            Active
-                        </div>
-                    </div>
-                    <div class="project-details">
-                        <div class="project-stage">
-                            <div class="detail-label">Current Stage</div>
-                            <div class="detail-value">Research</div>
-                        </div>
-                        <div class="project-score">
-                            <div class="detail-label">Feasibility Score</div>
-                            <div class="score-value">7.87/10</div>
-                        </div>
-                    </div>
-                    <div class="project-date">Created on Feb 28, 2026</div>
-                </div>
+        <div class="section">
+            <div class="section-title">Projects</div>
+            <div class="table-wrapper">
+                <div id="projectsTableContainer" class="loading">Loading projects...</div>
             </div>
-        </section>
+        </div>
 
-        <!-- Tools Section -->
-        <section class="tools-section">
-            <h2 class="section-title">Tools & Resources</h2>
-            <div class="tools-grid">
-                <a href="master_dashboard.html" class="tool-card">
-                    <div class="tool-header">
-                        <div class="tool-name">Master Dashboard</div>
-                    </div>
-                    <div class="tool-tag analytics">Analytics</div>
-                </a>
-
-                <a href="interview_tracker.html" class="tool-card">
-                    <div class="tool-header">
-                        <div class="tool-name">Interview Tracker</div>
-                    </div>
-                    <div class="tool-tag research">Research</div>
-                </a>
-
-                <a href="commerce_expert.html" class="tool-card">
-                    <div class="tool-header">
-                        <div class="tool-name">Commerce Expert</div>
-                    </div>
-                    <div class="tool-tag agent">RAG Agent</div>
-                </a>
-
-                <a href="rag_notebook_template.html" class="tool-card">
-                    <div class="tool-header">
-                        <div class="tool-name">RAG Notebook</div>
-                    </div>
-                    <div class="tool-tag query">AI Query</div>
-                </a>
-
-                <a href="upload_content.html" class="tool-card">
-                    <div class="tool-header">
-                        <div class="tool-name">Upload Content</div>
-                    </div>
-                    <div class="tool-tag ingest">Ingest</div>
-                </a>
-
-                <a href="knowledge_base.html" class="tool-card">
-                    <div class="tool-header">
-                        <div class="tool-name">Knowledge Base</div>
-                    </div>
-                    <div class="tool-tag ingest">Insights</div>
-                </a>
-            </div>
-        </section>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="system_architecture.html" class="footer-link">System Architecture &amp; Health</a>
-                <a href="knowledge_base.html" class="footer-link">Knowledge Base</a>
-                <a href="https://edenger.app.n8n.cloud" target="_blank" class="footer-link">n8n Workflows</a>
-                <a href="https://docs.google.com/spreadsheets/d/1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w/edit" target="_blank" class="footer-link">Google Sheet</a>
-            <a href="system_architecture.html" class="footer-link">System Architecture</a>
-            </div>
-            <div class="footer-text">
-                &copy; 2026 My Product Agent. — MyProductAgent.com
+        <div class="section">
+            <div class="section-title">Top Capabilities by Score</div>
+            <div class="chart-container">
+                <div id="capabilityChart" class="loading">Loading capability data...</div>
             </div>
         </div>
     </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="system_architecture.html">System Architecture</a>
+            <a href="https://edenger.app.n8n.cloud" target="_blank">n8n Workflows</a>
+            <a href="https://docs.google.com/spreadsheets/d/1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w" target="_blank">Google Sheet</a>
+        </div>
+        <div>&copy; 2026 My Product Agent. All rights reserved.</div>
+    </footer>
+
+    <script>
+        const SHEET_ID = '1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w';
+        google.charts.load('current', { packages: ['corechart', 'table'] });
+        google.charts.setOnLoadCallback(() => { loadProjects(); loadCapabilities(); loadDashboardMetrics(); });
+
+        function toggleDropdown(e) {
+            e.preventDefault();
+            const menu = e.target.nextElementSibling;
+            menu.classList.toggle('active');
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.nav-dropdown')) { menu.classList.remove('active'); document.removeEventListener('click', closeDropdown); }
+            });
+        }
+
+        function loadProjects() {
+            const query = new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=projects`);
+            query.send((response) => {
+                if (response.isError()) { document.getElementById('projectsTableContainer').innerHTML = '<div class="loading" style="color:#d32f2f;">Error loading projects.</div>'; return; }
+                renderProjectsTable(response.getDataTable());
+            });
+        }
+
+        function renderProjectsTable(dataTable) {
+            const rows = dataTable.getNumberOfRows();
+            const cols = dataTable.getNumberOfColumns();
+            if (rows === 0) { document.getElementById('projectsTableContainer').innerHTML = '<div class="loading">No projects found.</div>'; return; }
+            let html = '<table><thead><tr>';
+            const headers = [];
+            for (let i = 0; i < cols; i++) { const label = dataTable.getColumnLabel(i); headers.push(label); html += '<th>' + label + '</th>'; }
+            html += '</tr></thead><tbody>';
+            for (let i = 0; i < rows; i++) {
+                html += '<tr>';
+                for (let j = 0; j < cols; j++) {
+                    const value = dataTable.getValue(i, j);
+                    const colLabel = headers[j].toLowerCase();
+                    let cell = value !== null ? value : '';
+                    if (colLabel.includes('stage')) { cell = '<span class="stage-badge">' + cell + '</span>'; }
+                    else if (colLabel.includes('status')) {
+                        const sl = String(cell).toLowerCase();
+                        const sc = sl.includes('active') ? 'badge-active' : sl.includes('progress') ? 'badge-in-progress' : sl.includes('pending') ? 'badge-pending' : sl.includes('paused') ? 'badge-paused' : 'badge-pending';
+                        cell = '<span class="badge ' + sc + '">' + cell + '</span>';
+                    } else if (colLabel.includes('score') || colLabel.includes('feasibility')) { cell = '<span class="score">' + cell + '</span>'; }
+                    else if (colLabel.includes('updated') || colLabel.includes('date')) { if (cell) { const d = new Date(cell); if (!isNaN(d)) { cell = d.toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'}); } } }
+                    html += '<td>' + cell + '</td>';
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            document.getElementById('projectsTableContainer').innerHTML = html;
+        }
+
+        function loadCapabilities() {
+            const query = new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=capabilities`);
+            query.send((response) => {
+                if (response.isError()) { document.getElementById('capabilityChart').innerHTML = '<div class="loading" style="color:#d32f2f;">Error loading capabilities.</div>'; return; }
+                renderCapabilityChart(response.getDataTable());
+            });
+        }
+
+        function renderCapabilityChart(dataTable) {
+            if (dataTable.getNumberOfRows() === 0) { document.getElementById('capabilityChart').innerHTML = '<div class="loading">No capability data found.</div>'; return; }
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Product Agent - Dashboard</title>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background-color: #F0F4F8;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        nav {
+            background-color: white;
+            border-bottom: 1px solid #E0E8F0;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 2rem; }
+        .nav-title { font-size: 18px; font-weight: 600; color: #1F4E79; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: #555; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: #2E75B6; }
+        .nav-links a.active { color: #2E75B6; border-bottom: 2px solid #2E75B6; padding-bottom: 5px; }
+        .nav-dropdown { position: relative; }
+        .dropdown-btn { background: none; border: none; color: #555; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+        .dropdown-btn:hover { color: #2E75B6; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #E0E8F0; border-radius: 4px; min-width: 150px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); z-index: 100; }
+        .dropdown-menu.active { display: block; }
+        .dropdown-menu a { display: block; padding: 10px 16px; color: #555; text-decoration: none; font-size: 13px; transition: background-color 0.2s; }
+        .dropdown-menu a:hover { background-color: #F0F4F8; color: #2E75B6; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .kpi-card { background: white; border-radius: 6px; padding: 1.5rem; border: 1px solid #E0E8F0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        .kpi-label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+        .kpi-value { font-size: 32px; font-weight: 700; color: #1F4E79; margin-bottom: 0.5rem; }
+        .kpi-change { font-size: 12px; color: #666; }
+        .page-header { margin-bottom: 2rem; }
+        .page-title { font-size: 28px; font-weight: 700; color: #1F4E79; margin-bottom: 0.5rem; }
+        .page-subtitle { font-size: 14px; color: #888; }
+        .section { margin-bottom: 2.5rem; }
+        .section-title { font-size: 16px; font-weight: 600; color: #1F4E79; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .table-wrapper { background: white; border-radius: 6px; border: 1px solid #E0E8F0; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background-color: #F9FAFB; border-bottom: 1px solid #E0E8F0; }
+        th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.4px; }
+        td { padding: 12px 16px; border-bottom: 1px solid #F0F4F8; font-size: 13px; color: #333; }
+        tbody tr:hover { background-color: #FAFBFC; }
+        tbody tr:last-child td { border-bottom: none; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 3px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .badge-active { background-color: #E8F5E9; color: #2E7D32; }
+        .badge-in-progress { background-color: #FFF3E0; color: #E65100; }
+        .badge-pending { background-color: #F3E5F5; color: #6A1B9A; }
+        .badge-paused { background-color: #ECEFF1; color: #455A64; }
+        .stage-badge { display: inline-block; background-color: #E3F2FD; color: #1565C0; padding: 4px 12px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+        .score { font-weight: 600; color: #1F4E79; }
+        .loading { display: flex; align-items: center; justify-content: center; padding: 40px; color: #888; font-size: 14px; }
+        .chart-container { background: white; border-radius: 6px; border: 1px solid #E0E8F0; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+        #capabilityChart { width: 100%; height: 400px; }
+        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+        .action-btn { background: white; border: 1px solid #E0E8F0; border-radius: 6px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: #1F4E79; font-weight: 500; font-size: 13px; }
+        .action-btn:hover { background-color: #F0F4F8; border-color: #2E75B6; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+        footer { background-color: white; border-top: 1px solid #E0E8F0; padding: 2rem; text-align: center; font-size: 12px; color: #888; margin-top: 3rem; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .footer-links a { color: #2E75B6; text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: #1F4E79; }
+        @media (max-width: 768px) { .nav-links { gap: 1rem; font-size: 12px; } .container { padding: 1rem; } .kpi-row { grid-template-columns: repeat(2, 1fr); gap: 1rem; } .page-title { font-size: 22px; } table { font-size: 12px; } th, td { padding: 8px 12px; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <div class="nav-title">My Product Agent</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Dashboard</a></li>
+                <li><a href="create_project.html">Projects</a></li>
+                <li><a href="commerce_expert.html">Knowledge</a></li>
+                <li class="nav-dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown(event)">Tools &#9660;</button>
+                    <div class="dropdown-menu">
+                        <a href="interview_tracker.html">Interview Tracker</a>
+                        <a href="upload_content.html">Upload Content</a>
+                        <a href="rag_management.html">RAG Management</a>
+                        <a href="describe_idea.html">Submit Idea</a>
+                        <a href="prioritization_prd.html">PRD Generator</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Project portfolio, capability tracking, and signals overview</p>
+        </div>
+
+        <div class="kpi-row">
+            <div class="kpi-card"><div class="kpi-label">Active Projects</div><div class="kpi-value" id="kpiActiveProjects">-</div><div class="kpi-change">Projects in progress</div></div>
+            <div class="kpi-card"><div class="kpi-label">Capabilities Tracked</div><div class="kpi-value">21</div><div class="kpi-change">Product dimensions</div></div>
+            <div class="kpi-card"><div class="kpi-label">Avg Feasibility Score</div><div class="kpi-value" id="kpiAvgFeasibility">-</div><div class="kpi-change">Weighted average</div></div>
+            <div class="kpi-card"><div class="kpi-label">Signals Collected</div><div class="kpi-value" id="kpiSignalsCollected">-</div><div class="kpi-change">Data points indexed</div></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Quick Actions</div>
+            <div class="quick-actions">
+                <a href="create_project.html" class="action-btn">Create Project</a>
+                <a href="describe_idea.html" class="action-btn">Submit Idea</a>
+                <a href="upload_content.html" class="action-btn">Upload Content</a>
+                <a href="commerce_expert.html" class="action-btn">Commerce Expert</a>
+                <a href="rag_management.html" class="action-btn">RAG Management</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Projects</div>
+            <div class="table-wrapper">
+                <div id="projectsTableContainer" class="loading">Loading projects...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Top Capabilities by Score</div>
+            <div class="chart-container">
+                <div id="capabilityChart" class="loading">Loading capability data...</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="system_architecture.html">System Architecture</a>
+            <a href="https://edenger.app.n8n.cloud" target="_blank">n8n Workflows</a>
+            <a href="https://docs.google.com/spreadsheets/d/1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w" target="_blank">Google Sheet</a>
+        </div>
+        <div>&copy; 2026 My Product Agent. All rights reserved.</div>
+    </footer>
+
+    <script>
+        const SHEET_ID = '1pioLz-mtObrcQq1126PmUAVg9QCs2plAyvp5oRXVK8w';
+        google.charts.load('current', { packages: ['corechart', 'table'] });
+        google.charts.setOnLoadCallback(() => { loadProjects(); loadCapabilities(); loadDashboardMetrics(); });
+
+        function toggleDropdown(e) {
+            e.preventDefault();
+            const menu = e.target.nextElementSibling;
+            menu.classList.toggle('active');
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.nav-dropdown')) { menu.classList.remove('active'); document.removeEventListener('click', closeDropdown); }
+            });
+        }
+
+        function loadProjects() {
+            const query = new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=projects`);
+            query.send((response) => {
+                if (response.isError()) { document.getElementById('projectsTableContainer').innerHTML = '<div class="loading" style="color:#d32f2f;">Error loading projects.</div>'; return; }
+                renderProjectsTable(response.getDataTable());
+            });
+        }
+
+        function renderProjectsTable(dataTable) {
+            const rows = dataTable.getNumberOfRows();
+            const cols = dataTable.getNumberOfColumns();
+            if (rows === 0) { document.getElementById('projectsTableContainer').innerHTML = '<div class="loading">No projects found.</div>'; return; }
+            let html = '<table><thead><tr>';
+            const headers = [];
+            for (let i = 0; i < cols; i++) { const label = dataTable.getColumnLabel(i); headers.push(label); html += '<th>' + label + '</th>'; }
+            html += '</tr></thead><tbody>';
+            for (let i = 0; i < rows; i++) {
+                html += '<tr>';
+                for (let j = 0; j < cols; j++) {
+                    const value = dataTable.getValue(i, j);
+                    const colLabel = headers[j].toLowerCase();
+                    let cell = value !== null ? value : '';
+                    if (colLabel.includes('stage')) { cell = '<span class="stage-badge">' + cell + '</span>'; }
+                    else if (colLabel.includes('status')) {
+                        const sl = String(cell).toLowerCase();
+                        const sc = sl.includes('active') ? 'badge-active' : sl.includes('progress') ? 'badge-in-progress' : sl.includes('pending') ? 'badge-pending' : sl.includes('paused') ? 'badge-paused' : 'badge-pending';
+                        cell = '<span class="badge ' + sc + '">' + cell + '</span>';
+                    } else if (colLabel.includes('score') || colLabel.includes('feasibility')) { cell = '<span class="score">' + cell + '</span>'; }
+                    else if (colLabel.includes('updated') || colLabel.includes('date')) { if (cell) { const d = new Date(cell); if (!isNaN(d)) { cell = d.toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'}); } } }
+                    html += '<td>' + cell + '</td>';
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            document.getElementById('projectsTableContainer').innerHTML = html;
+        }
+
+        function loadCapabilities() {
+            const query = new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=capabilities`);
+            query.send((response) => {
+                if (response.isError()) { document.getElementById('capabilityChart').innerHTML = '<div class="loading" style="color:#d32f2f;">Error loading capabilities.</div>'; return; }
+                renderCapabilityChart(response.getDataTable());
+            });
+        }
+
+        function renderCapabilityChart(dataTable) {
+            if (dataTable.getNumberOfRows() === 0) { document.getElementById('capabilityChart').innerHTML = '<div class="loading">No capability data found.</div>'; return; }
+            const headerRow = [];
+            for (let i = 0; i < dataTable.getNumberOfColumns(); i++) { headerRow.push(dataTable.getColumnLabel(i)); }
+            const rows = [];
+            for (let i = 0; i < dataTable.getNumberOfRows(); i++) {
+                const row = [];
+                for (let j = 0; j < dataTable.getNumberOfColumns(); j++) { row.push(dataTable.getValue(i, j)); }
+                rows.push(row);
+            }
+            rows.sort((a, b) => (parseFloat(b[b.length-1])||0) - (parseFloat(a[a.length-1])||0));
+            const topRows = rows.slice(0, 10);
+            const chartData = google.visualization.arrayToDataTable([headerRow, ...topRows]);
+            const options = { title: '', chartArea: {width:'75%',height:'90%'}, hAxis: {minValue:0, textStyle:{fontSize:12,color:'#666'}, gridlines:{color:'#e0e8f0'}}, vAxis: {textStyle:{fontSize:12,color:'#333'}}, bar: {groupWidth:'75%'}, legend: {position:'none'}, colors: ['#2E75B6'], backgroundColor: 'transparent' };
+            const chart = new google.visualization.BarChart(document.getElementById('capabilityChart'));
+            chart.draw(chartData, options);
+        }
+
+        function loadDashboardMetrics() {
+            const query = new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=_dashboard`);
+            query.send((response) => {
+                if (response.isError()) { console.warn('Dashboard metrics sheet not found'); return; }
+                const dt = response.getDataTable();
+                for (let i = 0; i < dt.getNumberOfRows(); i++) {
+                    const metric = dt.getValue(i, 0);
+                    const value = dt.getValue(i, 1);
+                    if (metric && value !== null) {
+                        const ml = String(metric).toLowerCase();
+                        if (ml.includes('active') && ml.includes('project')) { document.getElementById('kpiActiveProjects').textContent = value; }
+                        else if (ml.includes('feasibility')) { document.getElementById('kpiAvgFeasibility').textContent = (Math.round(parseFloat(value)*100)/100).toFixed(2); }
+                        else if (ml.includes('signal')) { document.getElementById('kpiSignalsCollected').textContent = value; }
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            const query = new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=capabilities`);
+            query.send((r) => { if (!r.isError()) renderCapabilityChart(r.getDataTable()); });
+        });
+    </script>
 </body>
 </html>
